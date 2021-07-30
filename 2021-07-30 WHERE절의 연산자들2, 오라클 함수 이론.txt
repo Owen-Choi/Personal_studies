@@ -1,0 +1,115 @@
+IS NULL 연산자
+	
+	SQL문에서 NULL은 프로그래밍 언어에서처럼 등가연산자로 바로 확인할 수 없다.
+	가령 다음과 같은 SQL문이 있다고 생각해보자
+	SELECT *
+		FROM EMP
+	WHERE COMP = NULL;
+	
+	출력 결과는 COMP가 비어있는 모든 행이 출력되지 않고, 그냥 비어있는 화면이 출력된다.	
+	만약 COMP가 비어있는 모든 행을 출력하고 싶다면 IS NULL 연산자를 이용해야 한다.
+
+	SELECT * 
+		FROM EMP
+	WHERE COMP IS (NOT) NULL;
+	
+	WHERE COMP = NULL 이 비어있는 화면을 출력하는 이유는, 무엇인지 모르는 값과 비교를 하기에
+	결과값이 같은지, 작은지, 큰지 아무것도 모르기 때문이다.
+
+	AND/OR 연산자와 함께 사용할 때도 주의사항이 있다.
+	다음의 SQL문의 출력 결과를 살펴보자
+
+	SELECT * 
+		FROM EMP
+	WHERE SAL > NULL
+		AND COMP IS NULL;
+
+		==> 빈 화면이 출력된다. AND 연산자는 조건문 모두가 true가 되어야 하기 때문에.
+
+	SELECT *
+		FROM EMP
+	WHERE SAL > NULL
+		OR COMP IS NULL
+
+		==> COMP 가 비어있는 모든 행이 출력된다. OR 연산자는 조건문 중 하나라도 true면 
+		참을 반환하기 때문에.
+
+집합 연산자
+
+	집합 연산자는 두개 이상의 SELECT 문의 결과값을 연결시켜주는 연산자이다.
+	여기서 중복되는 결과값은 제거한다. 
+	ex) SELECT * 
+		FROM EMP
+	     WHERE DEPTNO = 10
+	     UNION
+	     SELECT *
+		FROM EMP
+	     WHERE DEPTNO = 20;
+	
+		==> 부서 번호(DEPTNO)가 10인 결과와 20인 결과가 연결되어 한번에 출력된다.
+
+	*주의사항 : UNION으로 연결된 모든 SELECT 문은 출력하려는 열 개수와 각 열의 자료형이 순서별로 일치해야 한다.
+	열이 꼭 동일할 필요는 없다. 열은 달라도 위의 조건만 만족한다면 결과는 좀 이상할 지라도 출력이 되기는 한다.
+
+	UNION ALL
+		기본적인 기능은 UNION과 동일하지만 중복을 제거하지 않는다. 다음의 SQL문을 살펴보자
+
+	SELECT *
+		FROM EMP
+	WHERE DEPTNO = 10
+	UNION ALL
+	SELECT *
+		FROM EMP
+	WHERE DEPTNO = 10;
+	
+		==> 만약 UNION 연산자를 사용했다면 부서번호가 10인 행들이 한번씩만 출력됐을 것이다.
+		하지만 UNION ALL을 사용했으므로 부서번호가 10인 행들이 각 2번씩 출력된다.
+		같은 합집합 기능이지만 결과값이 완전히 달라지므로 유의하자.
+
+	MINUS
+		쉽게 설명하자면 차집합이다. 위의 SELECT문의 결과에서 아래의 SELECT문의 결과를 뺀 결과만 출력한다.
+
+	SELECT EMPNO, ENAME, SAL, DEPTNO
+		FROM EMP
+	MINUS
+	SELECT EMPON, ENAME, SAL, DEPTNO
+		FROM EMP
+	WHERE DEPTNO = 10;
+	
+		==> 부서번호가 10인 결과를 제외한 나머지 결과만 출력된다.
+
+	INTERSECT
+		쉽게 설명하자면 교집합이다. 위의 SELECT문과 아래의 SELECT문의 결과 중 겹치는 결과만 출력한다.
+
+	SELECT EMPNO, ENAME, SAL, DEPTNO
+		FROM EMP
+	WHERE SAL <= 3000
+	INTERSECT
+	SELECT EMPNO, ENAME, SAL, DEPTNO
+		FROM EMP
+	WHERE SAL <= 1500;
+
+		==> 봉급이 1500 이하인 값들만 출력된다.
+
+오라클 함수(이론)
+
+	오라클 함수란 ? 
+		특정한 결과 값을 얻기 위해 데이터를 입력할 수 있는 특수 명령어를 의미함
+	
+	오라클 함수의 종류
+
+		내장함수
+			내장함수란 오라클에서 기본적으로 제공하는 함수이다.
+			내장함수는 입력방식에 따라 데이터 처리에 사용되는 행이 나뉜다.
+
+				단일행 함수
+					데이터가 한 행씩 입력되고 입력된 한 행당 결과가 하나씩 나오는 함수
+				다중행 함수
+					여러 행이 입력되어 하나의 행으로 결과가 반환되는 함수
+		
+		사용자 정의 함수
+			사용자 정의 함수란 사용자가 용도와 편의에 맞게 정의한 함수를 의미한다.
+
+	
+		
+	
