@@ -1,0 +1,137 @@
+특정 문자를 다른 문자로 바꾸는 REPLACE 함수
+
+	REPLACE : 특정 문자열 데이터에 포함된 문자를 다른 문자로 대체할 경우에 사용하면 유용한 함수
+		REPLACE([문자열 데이터 또는 열 이름(필수)], [찾는 문자(필수)], [대체할 문자(선택)])
+			* 만약 대체할 문자를 입력하지 않았다면 찾는 문자로 지정한 문자는
+			문자열 데이터에서 삭제된다.
+
+		ex)
+			SELECT '010-1234-5678' AS REPLACE_BEFORE,
+				REPLACE('010-1234-5678', '-', ' ') AS REPLACE_1,
+				REPLACE('010-1234-5678', '-')AS REPLACE_2
+			FROM DUAL;
+
+데이터의 빈 공간을 특정 문자로 채우는 LPAD, RPAD 함수
+	
+	LPAD, RPAD : 각각 Left PADding, Right PADding 의 약자로, 왼쪽과 오른쪽의 공간을 지정한 데이터의 자릿수
+	만큼 지정한 문자로 채우는 함수
+
+		LPAD(=RPAD) ([문자열 또는 데이터 또는 열 이름(필수)], [데이터의 자릿수(필수)],
+			[빈 공간에 채울 문자(선택)])
+			*만약 빈 공간에 채울 문자를 지정하지 않으면 빈 공간의 자릿 수만큼 공백이 들어간다.
+
+		ex)
+			SELECT 'Oracle',
+				LPAD('Oracle', 10, '#')AS LPAD_1,
+				RPAD('Oracle', 10, '*')AS RPAD_1,
+				LPAD('Oracle', 10)AS LPAD_2,
+				RPAD('Oracle', 10)AS RPAD_2
+			FROM DUAL;
+
+			
+		개인정보와 같은 데이터의 노출을 최소화 할 때도 사용할 수 있다.
+		
+		ex)
+			SELECT
+				RPAD('971225-', 14, '*')AS RPAD_JMNO,
+				RPAD('010-1234-', 13, '*')AS RPAD_PHONE
+			FROM DUAL;
+
+두 문자열 데이터를 합치는 CONCAT 함수
+
+		ex)
+			SELECT CONCAT(EMP, ENAME),
+				CONCAT(EMPNO, CONCAT(' : ', ENAME))
+			FROM EMP
+			WHERE ENAME = 'SCOTT';
+
+			RESULT : 1. 7788SCOTT
+			            2. 7788 : SCOTT
+
+			||연산자 : CONCAT 함수와 유사하게 열이나 문자열을 연결한다.
+
+			ex)
+				SELECT EMPNO || ENAME,
+					EMPNO || ' : ' || ENAME
+				FROM EMP
+				WHERE ~
+
+특정 문자를 지우는 TRIM, LTRIM, RTRIM 함수
+
+		TRIM([삭제 옵션(선택)], [삭제할 문자(선택)], FROM [원본 문자열 데이터(필수)])
+		* 삭제 옵션을 생략할 경우 BOTH, 즉 양쪽 모두에서 문자를 제거하는 옵션이 선택된다.
+		삭제할 문자를 생략할 경우 공백이 제거된다.
+
+		ex)
+			SELECT	'[' || TRIM( ' _ _Oracle_ _ ') || ']'AS TRIM,
+				'[' || TRIM(LEADING FROM ' _ _Oracle_ _ ') || ']' AS TRIM_LEADING,
+				'[' || TRIM(TRAILING FROM ' _ _Oracle_ _ ') || ']' AS TRIM_TRAILING,
+				'[' || TRIM(BOTH FROM ' _ _Oracle_ _ ') || ']' AS TRIM_BOTH
+			FROM DUAL;
+
+		LEADING : 왼쪽에 있는 글자를 지움
+		TRAILING : 오른쪽에 있는 글자를 지움
+		BOTH : 양쪽의 글자를 모두 지움(DEFAULT)
+
+		RESULT : 
+			TRIM                         TRIM_LEADING
+			---------------------------- ------------------------------
+			TRIM_TRAILING                  TRIM_BOTH
+			------------------------------ ----------------------------
+			[_ _Oracle_ _]               [_ _Oracle_ _ ]
+			[ _ _Oracle_ _]                [_ _Oracle_ _]
+
+
+		ex2)
+			SELECT	'[' || TRIM ('_' FROM '_ _Oracle_ _') || ']'AS TRIM,
+				'[' || TRIM(LEADING '_' FROM '_ _Oracle_ _') || ']' AS TRIM_LEADING,
+				'[' || TRIM(TRAILING '_' FROM '_ _Oracle_ _') || ']' AS TRIM_TRAILING,
+				'[' || TRIM(BOTH '_' FROM '_ _Oracle_ _') || ']' AS TRIM_BOTH
+			FROM DUAL;
+
+		RESULT :
+			TRIM                     TRIM_LEADING               TRIM_TRAILING
+			------------------------ -------------------------- --------------------------
+			TRIM_BOTH
+			------------------------
+			[ _Oracle_ ]             [ _Oracle_ _]              [_ _Oracle_ ]
+			[ _Oracle_ ]
+
+		LTRIM, RTIM 함수의 사용법
+			LTRIM(=RTRIM) ([원본 문자열 데이터(필수)], [삭제할 문자 집합(선택)])
+			*TRIM함수와 마찬가지로 삭제할 문자를 지정하지 않으면 공백이 제거된다.
+			문자를 하나가 아닌 집합 단위로, 즉 문자열을 제거할 수 있다.
+
+		ex)
+			SELECT	'[' || TRIM(' _Oracle_ ') || ']'AS TRIM,
+				'[' || LTRIM(' _Oracle_ ') || ']'AS LTRIM,
+				'[' || LTRIM('<_Oracle_>', '_<') || ']'AS LTRIM_2,
+				'[' || RTRIM('  _Oracle_  ') || ']'AS RTRIM,
+				'[' || RTRIM('<_Oracle_>', '>_') || ']'AS RTRIM_2
+			FROM DUAL;
+
+		RESULT : 
+			TRIM                 LTRIM                  LTRIM_2
+			-------------------- ---------------------- --------------------
+			RTRIM                    RTRIM_2
+			------------------------ --------------------
+			[_Oracle_]           [_Oracle_ ]            [Oracle_>]
+			[  _Oracle_]             [<_Oracle]
+
+		** : 삭제 대상이 문자일 경우 해당 문자의 순서와 반복을 통해 만들어 낼 수 있는 모든 조합이
+		각각 왼쪽, 오른쪽부터 삭제된다.(사용하는 함수에 따라)
+		만약 삭제할 문자가 _< 이고, LTRIM함수를 사용하고 원본 문자열이 <_<_Oracle이면 결과는
+		Oracle이 된다.
+		하지만 만약 원본 문자열이 <_O<_racle 이라면 결과는 O<_racle이 된다. 이해하고 넘어가기.
+
+		위의 명령어는 다음과 같겠다.
+			SELECT '[' || LTRIM('<_O<_racle', '_<') || ']' AS LTRIMEX
+			FROM DUAL;
+			
+			RESULT : 
+				LTRIMEX
+				--------------------
+				[O<_racle]
+
+		*보통 실무에서 TRIM함수는 검색 기준이 되는 데이터에 혹시나 들어 있을지도 모르는 양쪽 끝의 
+		공백을 제거할 때 많이 사용한다고 한다.
