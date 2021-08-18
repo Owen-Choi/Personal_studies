@@ -1,0 +1,64 @@
+상황에 따라 다른 데이터를 반환하는 DECODE 함수와 CASE문
+
+	DECODE 함수
+		프로그래밍 언어의 SWITCH CASE와 비슷한 함수
+	DECODE([검사 대상이 될 열 또는 데이터, 연산이나 함수의 결과],
+		[조건 1], [데이터가 조건1과 일치할 때 반환할 결과], 
+		[조건 2], [데이터가 조건2와 일치할 때 반환할 결과],
+		. . .
+		[조건n], [데이터가 조건n과 일치할 때 반환활 결과],
+		[조건1~n과 일치한 경우가 없을 때 반환할 결과])
+
+	ex)
+		SELECT EMPNO, ENAME, JOB, SAL,
+			DECODE(JOB,
+				'MANAGER', SAL*1.1,
+				'SALESMAN', SAL*1.05),
+				'ANALYST, ' SAL,
+				SAL*1.03 ) AS UPSAL
+		FROM EMP;
+
+		위의 쿼리문에서 SAL*1.03이 default로 들어갔다.
+		만약 위 조건이 없다면 해당 사항이 없는 데이터들은 NULL로 들어간다.
+
+	CASE 문
+		기본적으로 DECODE함수와 같은 기능을 하지만 범용성이 더 높다.
+		DECODE함수같은 경우 각 조건에 사용하는 데이터가 반드시 같아야 하지만(위 예시에서
+		MANAGER, SALESMAN 등은 모두 JOB 열에 속함) CASE문은 각 조건에 사용하는 데이터가
+		서로 상관없어도 된다. 또한 DECODE함수는 조건과 같다(=)만을 비교할 수 있지만 CASE문은
+		조건보다 작거나 크다, 같다, 값이 없다(IS NULL) 등 다양한 조건을 사용할 수 있다.
+
+	CASE [검사 대상이 될 열 또는 데이터, 연산이나 함수의 결과(선택)]
+		WHEN [조건1] THEN [조건1의 결과 값이 true일 때, 반환할 결과]
+		WHEN [조건2] THEN [조건2의 결과 값이 true일 때, 반환할 결과]
+		. . .
+		WHEN [조건n] THEN [조건n의 결과 값이 true일 때, 반환할 결과]
+		ELSE [조건 1~n과 일치하는 경우가 없을 때 반환할 결과]
+	END	
+
+		CASE문으로 위에서 살펴보았던 DECODE 함수를 구현하면 다음과 같다.
+
+		SELECT EMPNO, ENAME, JOB, SAL,
+			CASE JOB
+				WHEN 'MANAGER' THEN SAL*1.1
+				WHEN 'SALESMAN' THEN SAL*1.05
+				WHEN 'ANALYST' THEN SAL
+				ELSE SAL*1.03
+			END AS UPSAL
+		FROM EMP;
+
+		별칭 지정 명령어 AS의 위치를 주목할 필요가 있겠다.
+
+		'=' 연산자 말고 다른 연산자를 사용하는 예시도 살펴보자
+	ex)
+		SELECT EMPNO, ENAME, COMM, 
+			CASE 
+				WHEN COMM IS NULL THEN '해당사항 없음'
+				WHEN COMM = 0 THEN '수당없음'
+				WHEN COMM > 0 THEN '수당 : ' || COMM
+			END AS COMM_TEXT
+		FROM EMP;
+
+		위의 예제에서 알 수 있듯이 CASE문은 각 조건식의 true, false 여부만을 검사하므로 기준데이터가
+		없어도 사용할 수 있다.
+		당연한 말이지만 DECODE 함수와 CASE문은 모두 조건별로 동일한 자료형의 데이터를 반환해야 한다.
