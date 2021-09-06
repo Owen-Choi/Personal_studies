@@ -1,0 +1,88 @@
+관계형 데이터 베이스 모델에서는 데이터를 표의 형태로 나타낸다.
+
+tuples - rows, records
+attributes - columns, fields
+
+attribute는 atomic하다. (더 이상 나눌 수 없다.)
+만약 ID가 10101인데 10과 101로 나누면 의미가 없는 것. (둘 다 아이디가 아닌 것이 돼버린다.)
+attribute는 null일 수도 있다.
+	null은 모르거나 없거나.
+	만약 전화번호를 예로 들면, 전화번호가 없거나, 전화번호를 모른다면 null을 넣는다.
+
+R(A1, A2, ... An)
+	==> R이 테이블, A들은 Attribute, 즉 데이터의 종류.
+
+n-tuple은 n개의 attribute로 구성된 tuple이다.
+
+이론적으로, 테이블은 tuple들의 집합이다.
+	수학적인 의미로의 집합 : 중복을 허용하지 않는다. 처음 릴레이션 모델을 만들었을 때
+	이렇게 정의를 하셨다고 한다.
+
+	==> 상용적으로는 튜플들이 중복될 수 있다.
+
+	
+키 : 테이블 안에 튜플들이 굉장히 많을 수 있는데 그 많은 튜플들 중에서 하나를 유니크하게 
+	딱 찍어낼 수 있는(identify할 수 있는) attribute가 키 이다.
+	슈퍼키라고도 한다. 	예) 학번
+	
+		그런데 만약 ID와 이름을 묶어서 키로 쓴다면, 그것은 Minimal하지 않다.
+		(ID만 쓴다면 Minimal) 슈퍼키 중에서 미니멀한 것을 candidate key라고 한다.
+	
+	슈퍼키는 굉장히 많을 수 있다.(ID와 아무거나 묶으면 뭐든지 키가 될 수 있다.)
+	 그런데 그것들 중에서 더 이상 줄일 수 없는 것이 candidate key(후보키)이다.
+
+	primary key(기본키, 주 키)
+		여러가지 candidate key 중에서 하나를 고른 것이다.
+		primary 키를 고른다면, 그 키를 나타날 때 밑줄을 그어 나타낸다.
+		
+
+	Foreign key(외래키)
+		만약 학교 테이블을 짤 때, 가천대에 핵융합과가 없는데 핵융합과의 학생이
+		테이블에 들어갈 수 없다. 그렇다면 학과 테이블에서 이름을 외래키로 잡고
+		그 외래키로 식별을 할 수 있다.
+
+	참조 무결성 제약조건(referential integrity constraint)
+		어떤 강사 테이블, 학과 테이블의 학과 이름은 학과 테이블에 있어야 한다.
+		
+
+	Schema Diagram 에서 takes 테이블에 밑줄이 5개가 그어져있다.
+	이건 절대 primary키가 5개라는 뜻이 아니라 5개의 attribute가 합쳐져서 하나의
+	primary 키가 됐다 하는 것이다.
+	그리고 이 테이블의 ID attribute는 foreign key 이다. 학생 테이블의 ID attribute를
+	참조한다.
+
+Relation query languages
+	Relational algebra(algebra : 대 소)만 다루겠다.
+	pure language의 3가지는 모두 Computing power가 같다. (표현력이 같다.)
+	즉 어떤 랭귀지로는 표현 가능한데 어떤 랭귀지로는 못한다 이런 현상이 없다는 것.
+	
+	relational algebra 의 operations
+		select syntax의 의미 : r테이블에서 세타 조건을 만족하는 tuple들을 모두 찾아라.
+		project syntax의 의미 : r테이블에서 A,C 두개의 attribute만 출력해라(중복삭제)
+		Union : 릴레이션 테이블은 튜플들의 집합이다. 따라서 이 집합들에 대해서
+		집합연산을 할 수 있다.(중복은 제거하는 것 같다.)
+		Union 연산은 항상 할 수 있는 것이 아니라 Union compatibility를 만족해야 가능하다.
+			일단 두개의 테이블의 attribute 개수가 같아야하고 대응되는 
+			attribute의 domain이 같아야한다. 즉 같은 type의 값을 가져야한다. do it에서 봄
+		Difference : 차집합.
+		Intersection : 교집합.
+		Cartesian product : r x s
+			r의 첫번째 tuple에 대해서 s의 튜플을 모두 붙여준다. 
+			만약 attribute의 이름이 중복된다면 하나는 r.A, 다른 하나는 s.A 와 같이 테이블의 이름과
+			연관지어 naming 해준다.
+
+		만약 테이블의 이름이 같다면 연산을 할때만 임시적으로 이름을 바꾸는 기능이 있다. - renaming table 페이지 참고.
+
+		각각의 operation의 결과는 항상 테이블이다. 당여한 이야기.
+
+		* Join : 굉장히 중요한 연산이다 .
+			데이터베이스는 굉장히 거대하다. 만약 두개 이상의 테이블에 대해 검색을 할 떄, 이 join은 반드시 사용된다.
+			join은 여러가지가 있는데, 그 중에 세타 조인이 있다.(나비넥타이)
+			Natural join : 세타 조인의 일종인데 두 테이블이 공통적으로 갖고있는 attribute가 같을 때 이것을 
+			네츄럴 조인이라고 부른다. 
+			나비넥타이만 있다면 네츄럴 조인이다.
+
+		질문 : 네츄럴 조인에서 겹치는 attribute는 외래키와 관계가 있나
+		답변 : 대부분 외래키다. 아주 좋은 질문이다.
+			
+		
