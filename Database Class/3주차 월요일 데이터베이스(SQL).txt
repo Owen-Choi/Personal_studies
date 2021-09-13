@@ -1,0 +1,99 @@
+실제 필드에서는 검색을 훨씬 더 많이 한다.
+검색을 위한 명령어는 대표적으로 SELECT 가 있다.
+	select a1,a2,.....
+	from r1,r2,.....
+	where pi
+	다 아는 구조지?
+
+굉장히 중요한 내용이라 언급하심 : 쿼리문의 결과는 relation. 마찬가지로 당연한 내용이지?
+			하나 다른 점은 쿼리문의 결과로 나온 결과는 임시 테이블이며 이것은 데이터베이스에
+			저장되지 않는다. 임시 테이블이 아닌 것을 기반테이블이라 하고, 이 기반 테이블은 
+			데이터베이스에 저장이 된다. 
+
+			relational algebra에서는 select 문이 파이(projection)가 되는데, select와는 엄연히
+			다르다고 함. 알아만 두자.
+
+		쿼리의 결과로는 tuple이 중복될 수도 있다. 만약 중복을 없애고싶다면 distinct 명령어를 사용하자.
+		distinct를 넣어주지 않으면 all이 default로 들어가서 모든 중복을 다 출력한다.
+
+		select *
+		from instructor; : 이것도 알지? instructor의 모든 attribute를 출력함.
+
+		select '437'; 이건 처음 보네. 그냥 문자열 437을 출력하는 기능이라고 한다.
+			쿼리문의 결과는 항상 테이블이기 때문에 437이라는 값을 가지는 테이블이 출력된다고 한다.
+			attribute의 이름도 437, 값도 437이 된다고 함.
+mysql> select '437';
++-----+
+| 437 |
++-----+
+| 437 |
++-----+
+
+		select 'A'
+		from instructor : A의 앞 뒤로 쿼테이션이 있기 때문에 이것은 문자열이다. 따라서 attribute를 의미
+		하는 것이 아니다. 이 명령어는 instructor의 tuple 개수 만큼 A가 출력된다고 한다.
+
+		select ID, name, salary/12 as monthly_salary
+			from instructor : 뭔 기능인지 알지? 하나 복습할 건 salary/12가 attribute 위치에 들어간다는 점.
+	
+		predicate : 논리 조건 식 : and/or/not
+			where 문에서 사용. 나머지는 다 아니까 용어만 알아두자. 
+			당연하게도 where문에는 산술 연산식이나 함수도 사용할 수 있다.
+
+	
+	만약 Select * 
+	       from instructor, teaches 등 테이블이 여러개 온다면 그것은 테이블들 간에 카티션 프로덕트를 하라는 의미이다.
+		즉 instrcutor와 teaches 의 모든 가능한 tuple의 쌍을 출력한다.
+
+		★Join : 2개 이상의 테이블을 검색하면 반드시 join을 사용한다. 
+		네츄럴 조인 : 
+			select * 
+			from instructor natural join teaches;
+				네츄럴 조인의 결과는 릴레이션이기 때문에 from 절에 들어갈 수 있는 것이다.
+			select name, course_id
+			from instructor, teaches
+			where instructor.ID = teaches.ID
+				이 쿼리문도 네츄럴 조인이지만, ID attribute가 2번이 나오게 된다. 기억하자.
+			조인과 키의 관계. 이건 다시 한번 알아보자. 중요한 것 같다.
+
+		똑같은 테이블을 as 오퍼레이션을 이용하여 다른 테이블인 것 처럼 사용할 수 있다.
+
+		select distinct T.name
+		from instructor instructor as T, instructor as S
+		where T.salary > S.salary and S.dept_name = 'Comp.Sci';
+			여기서 T와 S를 aliases 라고 하고, 복사본이라고 생각하면 된다고 한다.
+
+		select name from instructor
+		where name like '%dar%';
+			복습하고 가자. dar를 포함하고 있는 문자열을 instructor에서 찾아서 출력해라.
+		
+		만약 %가 들어가는 문자를 검색하고 싶다면 
+			like '100\%'escape'\'; 이렇게 하자. 
+		
+			'Intro%' 는 intro로 시작하는 모든 문자열을 검색한다.
+			'___' 문자열의 길이가 3인 모든 문자열을 검색한다.
+			'___%' 문자열의 길이가 3 이상인 모든 문자열을 검색한다.
+
+	tuple들의 순서
+		릴레이션에서 하나의 테이블은 tuple들의 집합이고, 집합이기에 순서는 중요하지 않다. (중복도 없다)
+		하지만 경우에 따라 순서가 필요할 수 있다. 
+			select distinct name from instructor
+				order by name (desc);		==> asc는 default
+		
+	where (instructor.ID, dept_name) = (teaches, 'Biology');
+		==> 괄호는 튜플로 사용하겠다는 의미.
+
+	(시험 나옴)두개의 테이블에 대해서 집합 연산을 하기 위해서 만족해야 하는 조건 : 
+		Union Compatibility : 중요한 개념.  이것을 만족해야 집합 연산이 가능하다.
+			집합 연산의 결과로 중복을 포함하고 싶다면 집합 연산 뒤에 all를 붙히면 된다.
+	
+	Null values : 
+		값이 null value인 경우는 값이 없거나 모르는 경우 두 가지이다.
+		attribute에 null value가 들어가는 경우가 종종 있는데 그럼 null 연산의 결과는 어떻게 될까?
+			null에 대한 산술 연산의 결과는 항상 null이다. 모르는 값에 5를 더하면 결과도 마찬가지로 모르기 때문이다.
+			만약 null값을 가지는 tuple을 찾고싶다면 salary = null의 형식은 성립할 수 없다.
+			여기서 (null 처리 연산자 기억나지?) where salary is null 이라고 사용한다. (시험 무조건 나옴)
+			
+			null이 포함된 논리연산의 결과는 항상 unknown이다. (논리 연산의 결과는 true, false, unknown 3가지가 있음)
+			마찬가지로 모르는 값이 true인지 false인지 모르기 때문.
+			논리 연산식의 결과값이 unknown이라면 결론적으로는 false 처리가 된다. 	
