@@ -1,0 +1,85 @@
+Aggregate function : 집계함수, 통계함수
+	avg, min, max, sum, count
+	입력으로 받는 값들의 개수가 많은 것이 특징
+		select avg(salary)
+		from instrcutor
+		where dept_name = 'Comp.Sci';
+
+			select count(distinct ID)
+				==> 선택된 테이블과 조건을 만족하는 ID의 개수를 중복을 제거하여 출력
+		Count		
+			어떤 테이블이 A, B라는 attribute가 있다면 count 개수는 어떤 attribute를 대상으로 하던 같다.
+				select count(*)
+				from course;
+
+		Group By
+			Group By는 각 그룹별로 실행이 되는 함수이다.
+			이건 잘 이해가 안가네. 실습으로 해봐야겠다.
+			유의할 점은 각 그룹별로 한줄을 출력하는 건데, 만약 각 그룹별로 한줄이 넘어가게 되면
+			실행이 안된다. ppt 42를 봤을 때, 만약 ID가 2개 3개가 되면 한줄이 넘어가고 오류가 된다.
+			표준에서는 에러라고 뜨지만 mysql / 오라클은 실행이 된다.
+
+		Having clause
+			select dept_name, avg(salary)
+			from instructor
+			group by dept_name
+			having avg(salary) > 42000;
+			 ==> 그룹 중에서 having절의 조건을 만족하는 그룹만 출력한다.
+				만약 group by가 없으면 에러가 날까? ==> 실습에서 해보란다.		
+		
+		Aggregate function을 실행할 때 null이 있다면 그냥 없는 것으로 취급한다. null로 인해 연산이 꼬이기 때문인가?
+		count(*)만 유일하게 예외로 null value를 무시하지 않는다고 한다. 즉 null value도 count한다.
+		만약 salary가 모두 null일때, count(salary) 는 0을 return하고 count(*)는 null의 개수를 return한다.
+
+		
+
+	Nested Subqueries
+		쿼리 안에 쿼리가 있는 경우. Select 문장 안에 Select문장이 있는 경우
+			ppt 45참고 : 안쪽에 있는 select 문을 먼저 실행을 시키고 밖에 있는 select문 실행하기
+			
+		Some 
+			마찬가지로 중첩된 쿼리문의 구조를 띄는데, 의미는 다음과 같다.
+			where salary > some(select salary from instructor where dept_name = 'Biology');
+				오른쪽의 select문의 결과 중 하나라도 조건을 만족하는 것이 있다면 결과를 출력한다.
+		
+		all
+			some은 하나라도 만족을 하면 출력이 됐지만 all은 모든 tuple이 만족을 해야 출력한다.
+
+		exists
+			여태까지는 안쪽의 select문을 먼저 실행했지만 exists 문은 살짝 맥락이 다른 것 같다.
+			ppt 49참고 : 밖에서 attribute 정보를 받아오던가 해서 exitsts 조건을 실행하고 조건을 
+			만족하는 값이 '존재'한다면 출력한다. : 15번 실행됨, 15^2 아님
+
+		not exists
+			결과가 없으면 출력을 하고 있으면 출력을 하지 않는다. 즉 exists와 완전히 반대기능
+
+		unique
+			중복이 없을 경우 true(출력)
+
+		from절 안에 sub queries가 들어가는 경우
+			이것도 실습...
+
+		Scalar subquery
+			어떤 테이블의 튜플 하나에 대해서 여러줄을 출력할 수는 없다. 1줄 또는 0줄이다.
+			53 : 이해하고 넘어가자.
+
+Modification of the Databases
+		Deletion
+			delete from instructor;
+				==> instructor 안에 있는 모든 tuple을 없애라.
+			where절을 추가하면 조건을 만족하는 값만 제거할 수 있다.
+
+			54 : select문 연산으로 생성된 테이블의 결과에 포함이 되는 값만 없애기
+
+		Insertion
+			insert into course
+				values('CS-437', 'Database Systems', 'Comp. Sci.', 4);
+			만약 테이블 옆에 attribute를 지정해준다면 그 attribute에만 맞게 넣어주면 된다.
+
+			select문의 검색 결과를 통째로 insert하는 것도 가능하다.
+
+		Update
+			update instructor
+			set salary = salary * 1.03
+			where salary > 100000;
+				말 그대로 값을 업데이트 한다.
