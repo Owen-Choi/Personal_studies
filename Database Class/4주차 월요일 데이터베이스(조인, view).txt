@@ -50,3 +50,122 @@ Join :
 
 			뷰의 정의를 위해 다른 뷰가 사용될 수도 있다. 만약 v1의 정의를 위해 v2가 사용됐다면, v1은 v2에 의존적이다(depend on)
 			라고 할 수 있다. 자기 자신에게 의존하는 경우는 recursive 재귀적이라고 한다.
+
+			예제 : 2009년 가을에 개설된 강의를 출력하는 view를 만들어라!
+			
+				=> select * from course natural join section
+					where section.year = 2009 and section.semester = 'fall';
+					==> 얘는 2009년 가을에 개설된 강의를 출력하는 쿼리문.
+				
+				=>create view fall_2009 as
+					select * from course natural join section
+					where section.year = 2009 and section.semester = 'fall';
+
+			===> 그렇다면 2009년 가을에 개설된 강의 중 watson 빌딩에서 수업하는 강의만 출력해라!
+
+				=> select * from fall_2009 where building = 'watson';
+				
+					==> create view fall_2009_watson as select * from fall_2009 where building = 'watson';
+					(이후 출력.)
+					==>이것이 view 의존성의 예제이다.  fall_2009_watson은 fall_2009에 의존한다.
+
+	view의 확장.
+		view는 보통 테이블에 의해 유도가 되지만 뷰가 뷰를 유도하기도 한다(위에서 살펴본 내용). view Expansion은 이런 식으로 이루어진다.
+		view Expansion : 음....뷰 정의를 먼저 하지 않고 한 쿼리문의 From에서 바로 select절을 넣어 표현하는 것 같다. 
+				가독성 너무 안좋은데 왜 쓰는거지?
+		일단 view Expansion으로 위 예제를 나타내면 다음과 같다.
+
+			=> create view CS_fall_2009_watson as
+				select course_id, sec_id, building from
+				(select course_id, sec_id, building from course natural join
+				where section.year = 2009 and section.semester = 'fall')
+				as CS_fall_2009_2 where building = 'watson'	//이름을 as로 꼭 정의해줘야 한다고 한다.
+	view의 업데이트
+		insert into faculty(faculty는 id, name, dept_name로 이루어짐) values('30765', 'Green', 'Music');
+			**** : view를 update하면 view를 최초에 생성할 때 사용한 쿼리문의 릴레이션에도 값이 추가된다.
+			즉 위의 경우에선, faculty는 instructor 테이블에서 생성했고, instructor 테이블의 열은 id, name, dept_name, salary이므로
+			instructor 테이블에도 id가 30765, 이름이 Green, 전공이 Music, 월급이 ★null인 row가 추가된다.
+		view 데이터를 갱신할 때는 약간의 제한이 있다. 다음과 같은 상황에서는 데이터를 업데이트할 수 없다.
+		1. 만약 넣는 값 중 하나라도 Multiple values라면(ex : Taylor라는 빌딩에서 강의를 듣는 과가 여러개임)
+		2. 만약 넣는 값 중 하나라도 없다면(ex : Taylor라는 빌딩이 없음)
+		
+		대부분의 SQL은 다음과 같은 상황에서만 view 업데이트를 허용한다.
+		1.  from절에 오직 하나의 테이블만 있어야 함
+		2. select 절에는 오직 열 이름만 나열되어있어야 함. distinct, aggregates들 x
+		3. group by, having같은 절을 사용할 때도 view를 업데이트할 수 없다.
+
+		그리고 만약 history 전공의 instructor만 모아서 view를 만들었을때(where dept_name = 'history') 여기에 history가 아닌 다른 전공의
+		값을 넣게 된다면, 오류는 뜨지 않게되지만 view에 아예 반영이 되지 않는다. view에는 반영이 안되고 이 view를 만들기 위해 쓴
+		릴레이션에만 반영이 된다. 
+
+	Materialized views
+		view는 실제로 만들어지지 않고 정의만 된다고 했는데, 자주 사용되는 view는 속도 개선을 위해 실제로 저장할 수 있다.
+		이것이 Materialized view이다. 
+		주의할 점은 이 view를 사용할 때, view를 정의한 릴레이션은 업데이트 되었지만 view는 업데이트 되지 않은 경우(out of date)를
+		항상 check 해야한다. 근데 mysql은 지원안함 ㅋ
+
+	Transactions
+		sequence of query. and/or update statement. 작업의 단위 정도로 생각할 수 있다.
+		특징들 : 
+		Atomic transaction
+			일어나거나, 일어나지 않거나. 이 2가지로 원자성을 가진다. (더 쪼개질 수 없음)
+		Isolation 
+			동시에 여러 transaction들이 있을 때, 현재 transaction이 작업을 완료할 때 까지 다른 transcation들이 접근할 수 없음을 의미
+		항상 commit, rollback 둘 중 하나가 실행되어야 transaction이 종료된다. 	
+
+	무결성 제약조건(Integrity constraints)
+		데이터베이스의 사고를 예방하고 데이터 일관성을 침해하는 일을 최소화하기 위해서 우리가 무결성 제약조건을 지정해줄 수 있다.
+		ex : balace는 무조건 10000이 넘어야한다, 고객정보를 받을 때 phone number는 반드시 있어야 한다.
+
+			==> not null : 
+				값이 반드시 "있어야"한다.
+				name varchar(20) not null	
+			==> unique : 
+				값의 중복을 거부한다.
+				unique(attribute1, attribute2....)
+				==> 기본적으로 candidate key는 unique해야한다. 
+				(candidiate key는 null값은 허용한다. 하지만 primary key는 허용하지 않는다.)
+			==> check :
+				괄호안의 조건을 만족하는 값만 넣을 수 있음.
+	참조 무결성(Referential integrity)
+		외래키를 통해 두개 이상의 테이블이 참조관계, 연관성을 가질 때 이 외래키는 일관성을 유지해야 한다.
+		ppt에는 다음과 같이 나와있다. Biology가 instructor 테이블에 dept_name으로 들어가있다면 department 테이블에 반드시
+		Biology라는 tuple이 존재해야 한다.
+		그리고 만약 R테이블에서 S테이블의 A를 타고 들어올려면, 이 A는 반드시 S테이블의 primary key여야 한다고 한다.
+
+		보통 언제 어느 문제가 생기느냐, 엄마한테 없는 데이터를 자식의 foreign key로 넣을 때, 엄마의 primary key가 삭제될때, 
+		엄마의 primary키가 다른 값으로 update될 때 자식들이 꼬이고 문제가 된다고 한다.
+		이럴때 엄마가 바뀌면 나도 바뀌겠다! 이런 느낌으로 값을 넣어줄 수 있는데, 그게 referencial integrity임.
+		
+		Cascade :
+			on delete cascade : 엄마에서 delete되면 자식도 delete해라!
+			on update cascade : 엄마에서 update되면 자식도 update해라!
+		DDL에서 사용되며, 코드는 다음과 같다.
+		create table course (
+			...
+			dept_name varchar(20),
+			foreign key(dept_name) references department 
+			on delete cascade
+			on update cascade, ...
+			);
+
+	실습 : dept_ex 테이블과 stu_ex 테이블 선언, 만약 dept_ex 테이블에서 소프트웨어 학과의 dept_code를 501로 고치면 stu_ex 테이블의
+		소프트웨어 코드도 501로 바뀌게, 그리고 만약 화학과의 코드를 지운다면 stu_ex 테이블에서 화학과의 코드를 null로 만들기.
+		create table dept_ex (
+			dept_code int primary key,
+			dept_name varchar(20)
+		);
+		create table stu_ex (
+			stud_id int primary key
+			dept_code int,
+			name varchar(20),
+			foreign key(dept_code) references dept_ex(dept_code)
+			on update cascade		//값이 똑같이 업데이트됨 :: cascade
+			on delete set null		//지울 경우 값이 null이 됨 :: set null
+		); 
+
+		==> 이후 insert into로 값 넣기.
+		==> 이후 update dept_ex set dept_code = 501 로 값 변경
+		==> 이후 delete from dept_ex where dept_name = '화학과'
+	index 잠깐 언급했는데 자세히 모르겠다. 구글링 ㄱㄱ
+	
