@@ -1,0 +1,75 @@
+Design process
+	
+	1. conceptual schema를 만드는 conceptual design
+		우리가 만약 학교 데이터베이스를 만드면 이 데이터베이스를 사용하는 사람들이 있을텐데
+		이 사람들이 어떤 need가 있는지를 완전히 분석 해야한다.
+		==> functional requirements를 파악하고 잘 명시해야한다.
+	
+		conceptual schema : 관계형 데이터베이스 스키마는 테이블들을 만드는건데 처음부터 
+		테이블을 만들기 시작해버리면 데이터베이스가 안좋아질 수 있다. 그래서 컨셉츄얼 스키마가 필요함.
+		사람에 가까운 스키마라고 생각하면 됨.
+		"좋은" 데이터베이스를 만들기 위해선 컨셉츄얼 스키마가 필요함
+	2. Logical design : 
+		사람의 직관에 가까운 컨셉츄얼 스키마를 관계형 스키마로 변형함.
+		어떤 열에는 어떤 데이터타입이 들어가고, 어떤 테이블에 이런 열들이 들어가야하고.... 이런것들.
+	
+	3. Physical design : 
+		실제 시스템에 대한 것. 하드디스크는 어떤 것을 쓰고, 머신은 몇대를 쓰며 어떤 것을 써야하고 등등
+
+Design approaches
+
+	Entity-relationship model : 컨셉츄얼 디자인에 사용, 줄여서 E-R 모델
+		크게 두 가지로. Entity와 Relationship으로 구성되어있음.
+		결과로 그림을 반환한다? ==> ER diagram.
+
+	Normalization : 
+		좋은 데이터베이스를 만들기 위해 거침. 비교적 어려운 개념.
+
+
+	E-R model :
+		엔티티 셋 : 같은 타입의 엔티티들이 여러개 모인 것. 자바의 class 개념과 비슷함.
+			엔티티 : 자바의 오브젝트와 굉장히 유사. 실제로 존재하고 다른 것들로부터 
+				구분 가능한 것.
+			ex) instructor = (ID, name, street, city, salary)
+				==> instructor라는 엔티티를 정의한 것. 테이블 정의와 거의 같다.
+			
+			ppt를 보면 76766 Crick 라는 엔티티가 instructor라는 엔티티 셋에 포함되어있다.
+			advisor relationship set 주목. 
+			(학생A, 교수B) 삼지창 advisor 의 의미는 A와B가 지도교수 관계라는 뜻.
+			relationship set은 마름모로 표시 attribute를 가질 수도 있다. 
+			
+		3개 이상의 엔티티 셋에 대해서 정의된 relationship은 드물다. 
+		(== degree가 3 이상인  relationship은 드물다)
+		ex : 어떤 학생이 어떤 프로젝트에 참여하고 있으며 누구의 지도를 받고 있는지.
+			project guide라는 relationship
+		이렇게 degree가 3 이상이면 직관적이지 못하다. 그리고 degree가 3 이상인 것은 degree가
+		2인 것으로 쪼갤 수 있기 때문에 드물다.
+
+		simple attribute : 더 이상 나눌 수 없는 것.
+		composite : 쪼갤 수 있는 것.
+		single-valued / multi-valued
+			==> 누군가는 전화번호가 여러개일 수 있다.
+
+		Derived attribute : 
+			생일 attribute가 있다면 나이 attribute는 유추할 수 있다. 여기서 나이가 derived
+	
+	Composite attribute : 
+		이름은 성과 이름으로 다시 나눠진다. 
+		주소도 마찬가지로 여러개로 나눌 수 있다.
+	
+	simple일지 composite일지는 개발하는 application에 따라 결정함. 둘 중 뭐가 맞는지는 모름.
+
+	Mapping Cardinalities
+		어떤 릴레이션쉽이 일대일, 일대다, 다대일, 다대다 관계인지 나타냄.
+		유의할 점 : 모든 entity가 연결되지 않을 수도 있다. 
+		
+	relationship set과 관계를 표현할 때 줄 위에 entity를 표시해주는 규칙이 있다.
+	one 관계는 화살표로 표시. many관계는 무방향 실선으로 표시.
+	양쪽 다 화살표일 경우 one to one. 학생 한명당 지도교수가 한명인 것과 같은 상황.
+
+	줄 두개로 되어있으면 모든 entity가 관계에 참여, 줄 하나로 되어있으면 모든 entity가 관계에 참여하지는 않음.
+	이것이 total participation(모두 참여)과 partial participation(부분 참여).
+
+	줄 위에 0..* , 1..1이라고 표시되는 것은 최소 (앞숫자) .. 최대(뒷숫자)의 relationship을 가질 수 있다는 것이다.
+	즉 위와 같은 예제에서는 일대다의 상황이다. 
+	0..*는 partial participation이다. 그리고 1..1은 total participation
