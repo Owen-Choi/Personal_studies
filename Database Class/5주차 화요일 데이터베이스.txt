@@ -1,0 +1,46 @@
+weak entity set : 
+	
+	엔티티 셋인데 약함. 
+	만약 course_id라는 section이 중복되고 section이라는 entity set의 모든 entity가 기본키를 구성한다면,
+	여기서 중복을 제거해 course_id를 지우면 기본키의 구성요소 하나가 사라지게 된다. ( = partial key)
+	이럴 경우 section은 course에게 의존적이다. 그리고 이 상황에서 section은 weak entity set이 된다.
+	(혼자서는 존재할 수 없음) 그리고 다이어그램에서 weak entity set은 두 줄로 표현한다.
+	추가적으로 weak entity set은 strong entity set에 existance dependant하다
+	그리고 weak entity set의 입장에서 strong entity set은 identifying entity set이다.
+	===> 기본키의 구성 attribute를 다른 테이블에서 끌어와야 하는 경우인듯.
+
+complex attribute
+
+	쪼갤 수 없는 simple attribute가 아닌 것은 모두 컴플렉스 어트리뷰트다.
+	관계형 데이터베이스에서는 simple attribute만 허용한다.
+	컴포지트? 컴플렉스? 그냥 단어 차이겠지?
+		==> composite attribute는 complex attribute 중 하나인 것이라고 한다.
+	
+	
+ER모델을 바로 프로그램에 쓸 수는 없다. 따라서 우리는 conceptual schema를 relational schema로 바꿔주어야 한다.
+	
+	엔티티 셋은 각각 하나의 테이블에 매핑이 된다.
+	attribute 이름은 그대로 쓴다.
+	
+	뭐 이런 원칙들이 있다고 한다.
+	relationship set도 마찬가지로 하나의 테이블로 매핑이 된다. 
+		관계 집합은 연결된 양쪽 엔티티 셋의 기본키들을 attribute로 갖는다.
+
+
+EM테이블
+
+	만약 instructor 테이블에 phone number라는 multi value attribute가 있다면 기본키와 phone
+	number 이 2개의 attribute를 가지는 새로운 릴레이션을 만들 수 있다.
+	그리고 이런 case에서 기본키는 이 2개를 묶어서 쓴다.
+	
+	2개 이상의 테이블을 합칠려면 join을 써야하는데, 굉장히 무리가 많이 가는 연산이다.
+	따라서 테이블을 합칠 일이 없게 그 수를 줄이는 것이 바람직하다.
+	여기서 다대다 관계의 테이블은 줄일 방법이 없다. 하지만 다른 테이블들은 줄일 수 있는 방법이 있다.
+	
+	inst_dept라는 relationship set에 대한 테이블을 department에 붙이는 게 좋을까 instructor에 붙이는 게 좋을까?
+	==> instructor에 붙이는 게 좋다. 하나의 dept_name에 instructor가 여러명 있게 되는데,
+		반대로 하나의 ID에 대해서 dept_name은 하나만 있게 된다. 관계형 데이터베이스에서는
+		complex attribute를 허용하지 않기 때문에 instructor에 붙이게 된다.
+
+	일대일 관계에서는 그냥 붙여도 된다.
+	
