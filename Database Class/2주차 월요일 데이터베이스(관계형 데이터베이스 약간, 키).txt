@@ -55,7 +55,11 @@ Relation query languages
 	Relational algebra(algebra : 대 소)만 다루겠다.
 	pure language의 3가지는 모두 Computing power가 같다. (표현력이 같다.)
 	즉 어떤 랭귀지로는 표현 가능한데 어떤 랭귀지로는 못한다 이런 현상이 없다는 것.
-	
+	-----내용 추가-----
+			관계대수(relational algebra)는 Relation을 다루는 연산으로, 검색 질의를 기술하는데 사용한다.
+			절차식 언어이다. 
+			간단하며 명시적(powerful) 표현을 사용한다.
+			폐쇄 특성(closure property)을 가진다고 한다.
 	relational algebra 의 operations
 		select syntax의 의미 : r테이블에서 세타 조건을 만족하는 tuple들을 모두 찾아라.
 		project syntax의 의미 : r테이블에서 A,C 두개의 attribute만 출력해라(중복삭제)
@@ -81,6 +85,9 @@ Relation query languages
 			Natural join : 세타 조인의 일종인데 두 테이블이 공통적으로 갖고있는 attribute가 같을 때 이것을 
 			네츄럴 조인이라고 부른다. 
 			나비넥타이만 있다면 네츄럴 조인이다.
+			----내용 추가----
+			세타 조인(Theta join) : 조인 연산에 세타(조건 : predicate)를 추가하여 조건을 만족하는 tuple들을 반환
+				Equi join : 세타 조인에서 equal (=) 연산을 사용하는 조인
 
 		질문 : 네츄럴 조인에서 겹치는 attribute는 외래키와 관계가 있나
 		답변 : 대부분 외래키다. 아주 좋은 질문이다.

@@ -22,7 +22,8 @@ MYSQL
 	(반대의 명령어는 rollback)	
 	mysql>USE MYDB; : mydb라는 personal database로 들어감
 	mysql> SHOW DATABASES; : 현재 내가 가지고 있는 personal database가 무엇인지 보여줌.  
-	mysql> DELETE DATABASE MYDB : mydb라는 personal database를 지운다. 그런데 mydb안에 테이블이 있으면 지워지지 않는다.
+	mysql> DELETE DATABASE MYDB : mydb라는 personal database를 지운다. 그런데 mydb안에 테이블이 있으면 지워지지 않는다.		//DDL의 DROP TABLE 연산을 먼저 해줘야 하는 듯 하다.
+															//테이블 역시 tuple이 있으면 지울 수 없다. SELECT * from TABLE_NAME으로 tuple을 지워주자.
 	따라서 테이블을 지워준 뒤 꼭 COMMIT을 해주자.
 	
 	SHOW TABLES : 사용하고 있는 personal database에 있는 테이블들을 보여준다.
@@ -36,16 +37,16 @@ MYSQL
 		indices : 검색을 빠르게 해주기 위한 것? 정확히 못들었다....
 		릴레이션에 관한 보안과 권한 정보
 		데이터를 실질적으로 어떻게 디스크에 저장을 할지
-	등을 DDL을 통해 정의할 수 있다.
+		등을 DDL을 통해 정의할 수 있다.
 
-	Domain types in SQL
+	Domain types in SQL		// 데이터 타입
 		
 		char(n) - 고정 길이(n)의 문자열, n은 당연히 지정 가능(예를 들어 학번처럼 길이가 정해져있는 값)
 		varchar(n) - 최대 길이가 n인 가변길이의 문자열
 		int - 정수
 		numeric(p,d) - 자리수 p, 소숫점 이하 자리수 d, 즉 numeric(3,1) 이면 44.5는 되지만 444.5는 안된다.
 		real, double precision : 자바에서 double과 같음
-		float(n) : 최소한 n-digit은 되야되는 double, 즉 float(8)이라면 최소한 8자리 이상의 수여야 한다.
+		float(n) : 최소한 n-digit은 돼야되는 double, 즉 float(8)이라면 최소한 8자리 이상의 수여야 한다.
 		(굉장히 정밀한 프로그램에서 많이 쓰임)
 
 		-------------------------------
@@ -68,7 +69,7 @@ MYSQL
 		salary		numeric(8,2),
 		primary key(ID),
 		foreign key(dept_name)
-			referencecs department(dept_name));
+			referencecs department(dept_name));			//dept_name은 외래키인데, department 테이블의 기본 키인 dept_name을 가져와서 쓰겠다.
 
 		외래키로서 참조되는 키는 참조되는 테이블에서 기본키여야 한다.
 
