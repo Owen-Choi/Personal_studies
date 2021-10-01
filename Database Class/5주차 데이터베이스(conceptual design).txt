@@ -36,7 +36,7 @@ Design approaches
 			ppt를 보면 76766 Crick 라는 엔티티가 instructor라는 엔티티 셋에 포함되어있다.
 			advisor relationship set 주목. 
 			(학생A, 교수B) 삼지창 advisor 의 의미는 A와B가 지도교수 관계라는 뜻.
-			relationship set은 마름모로 표시 attribute를 가질 수도 있다. 
+			relationship set은 마름모로 표시, attribute를 가질 수도 있다. 
 			
 		3개 이상의 엔티티 셋에 대해서 정의된 relationship은 드물다. 
 		(== degree가 3 이상인  relationship은 드물다)
@@ -52,11 +52,24 @@ Design approaches
 
 		Derived attribute : 
 			생일 attribute가 있다면 나이 attribute는 유추할 수 있다. 여기서 나이가 derived
+			반대 개념으로는 Base attribute가 있다.
 	
 	Composite attribute : 
 		이름은 성과 이름으로 다시 나눠진다. 
 		주소도 마찬가지로 여러개로 나눌 수 있다.
-	
+
+		ex)
+			instructor 테이블의 attribute는 다음과 같다.
+				ID
+				name
+				salary
+			여기서 name은 composite attribute로, simple attribute로 세분하면 다음과 같다.
+				ID
+				name
+					first_name
+					middle_name
+					last_name
+				salary
 	simple일지 composite일지는 개발하는 application에 따라 결정함. 둘 중 뭐가 맞는지는 모름.
 
 	Mapping Cardinalities
