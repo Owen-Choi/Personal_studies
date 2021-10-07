@@ -166,4 +166,57 @@ Higher Normal Forms (그 중에서 4NF) :
 				이것도 자세히 살펴보자. 먼저 CG -> I 에 CG를 augmentation하면 CGCG->CGI가 된다.
 				(CGCG는 CG이다.) 이어서 CG -> H에 I를 augmentation하면 CGI -> HI가 된다.
 				여기서 transitivity에 의해 (CG -> CGI -> HI) CG -> HI가 도출된다. 
-			
+	
+	Closure를 찾는 쓰도코드가 있다. 교수님 말씀에 따르면 위처럼 일일이 다 찾는 건 바보같은 짓이라고 한다.
+		쓰도코드를 요약하면 다음과 같다.
+			첫번째 step에서는 augmentation을 막(?) 해본다. 그리고 그런 것들을 다  F+ set에 넣는다.
+			두번째 step에서는 같은 attribute?를 기준으로 붙여본다(transitivity)
+			더 이상 추가할 FD가 없을 때까지 이것을 반복한다.
+
+		이렇게 F+를 찾아서 위의 form들에 해당하는지를 체크할 수 있는 것이다.
+	
+	암스트롱 공리 말고도 다른 rule들이 있다.	 
+
+		1. Union rule :
+			A -> B이고 A -> R이면 A -> BR이 유추된다.
+		2. Decomposition rule :
+			A -> BR 이면 A -> B이고 A -> R이다. (Union의 역순)
+		3. Pseudo-transitivity rule : 
+			A -> B 이고 BR -> D 이면 AR -> D이다.
+				이건 closure 찾을 때 비슷한 예제를 봤다. A -> B에 R를 augmentating하면 AR -> BR이 되고,
+				여기서 transitivity에 의해 AR -> D 가 유추된다.
+
+		
+Closure of Attribute sets
+		우리가 앞에서 배운 Closure와 다른 측면의 Closure라고 한다.
+		FD의 closure는 FD의 set들의 집합인 F의 cloure고, Attribute set의 closure는 Attribute에 대한 closure라고 한다.
+		즉 만약 A -> B라는 FD가 있으면 여기서 F+를 찾는게 아니라 A+를 찾을 수 있다고 한다.
+		
+		R = (A,B,C,G,H,I)
+		F = (A->B, A->C, CG->H, CG->I, B->H) 가 있고 a(알파)가 CG라고 하자.
+		a+ = (AG)+
+		a+는 AG에 영향을 받는 Attribute의 set이다.
+			어떻게 찾을까?
+			1. AG 자기 자신.
+			2. ABCG(B는 A에 영향을 받고, C도 A에 의해 영향을 받는다.)
+			3. ABCGH  (CG->H, CG->ABCG)
+			4. ABCGHI (CG->I, CG->ABCGH)
+		즉 ABCGHI가 a의 attribute closure이다.
+
+		이것을 가지고 AG, 즉 a가 candidate key인지 아닌지 판단할 수 있다.
+		AG -> R 라는 것은 (AG)+가 R을 포함한다고 볼 수 있다. 즉 AG로 인해 영향을 받는 모든 Attribute의 집합이 R을 포함한다면
+		AG는 R에서 candidate key이다.
+		그리고 AG의 subset이 superkey인지 아닌지도 같은 맥락으로 확인해볼 수 있다.
+		A+가 R을 포함한다면,
+		G+가 R을 포함한다면
+		각각 A,G는 R의 superkey이다.
+
+	Attribute closure의 사용
+		1. superkey에 대한 test로 사용할 수 있음.
+			위와 같은 맥락이다.
+		2. functional dependency에 대한 test로 사용할 수 있음.
+			a->b로 가는 FD가 성립하는지 test할 수 있다. (b가 a+에 속한다면 true)
+		3. F의 closure를 찾는데에도 사용될 수 있다.
+			R에 포함되는 모든 각각의 r에 대해서 r의 closure r+를 찾고, r+에 포함된 어떤 subset S에 대해서 r -> S라는 FD를 뽑아내면
+			이것이 F의 closure가 된다?? 왜?? ==> 생각해보면 그렇긴 하겠다. 
+				==> 강조를 하셨다.
