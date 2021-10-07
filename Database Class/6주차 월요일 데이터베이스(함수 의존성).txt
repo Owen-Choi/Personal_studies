@@ -90,6 +90,80 @@ Normalization(정규화)의 목표
 			위 릴레이션에서는 f1도 함수성 종속이 맞지만 시간이 지나고 여러 데이터가 삽입된다면 f1은 함수성 종속을 유지하기
 			어려울 것이다. 따라서 f2로 building까지 묶어주어야 함수성 종속이 안정적이게 된다.
 
+Boyce-Codd normal form
 
+		어떤 릴레이션 R이 Functional dependency F에 대해서 Boyce-Codd normal form에 있다는 말은 F의 closure(F+) 안에 있는
+		모든 함수성 의존 중에서, 다음의 조건 중 하나라도 만족할 때 해당된다. 
+		1. A -> B가 trivial(B가 A에 속함)
+		2. A가 R에 대해서 super key
+
+		ex) instr_dept (ID, name, salary, dept_name, bulding, budget) 라는 릴레이션에서
+			dept_name -> building, budget 이라는 FD는 1번, 2번 모두 만족하지 않는다.
+			1. dept_name은 building과 budget을 포함하지 않는다.
+			2. dept_name은 instr_dept의 super key가 아니다.
+		따라서 이 릴레이션은 BCNF가 아니다.
+
+		BCNF는 어떤 Functional Dependency가 있으면 이 FD의 A(앞에 있는 요소)가 super key가 되게 보장해주자 라는 의미를 지니고 있다.
+		그게 BCNF를 만든 이유라고 한다.
+
+		릴레이션을 BCNF로 만들려면 어떻게 쪼개야 할까?
+		릴레이션 R의 subset A,B가 있다고 치면 우리는 R을 다음과 같이 쪼갤 수 있다.
 		
+		1. A U B (합집합)
+		2. (R - (B - A))
 		
+		앞의 예제에 그대로 적용을 시켜보면 A = dept_name , B = building, budget 으로 볼 수 있고, 1번과 2번을 적용시키면 다음과 같다.
+		1. (dept_name, building, budget)
+		2.(ID, name, salary, dept_name)
+		
+		이렇게 나누면 BCNF를 만족하게 된다.	
+		★1의 경우에서는 dept_name이 super key가 된다. 애초에 FD가 성립했고 dept_name이 A의 자리에 있었으니 A와 B로만 이루어진
+		테이블에서는 반드시 A가 super key가 되게 된다.
+		2의 경우도 위와 같이 특정 열이 모든 경우에서 super key가 된다고 한다. == BCNF 만족
+		
+		BCNF의 한계 : 항상 원래 가지고 있던 릴레이션의 FD가 보존되게 쪼갠다는 보장이 없다. 그리고 이것을 검사하는 비용도
+		릴레이션의 규모가 커진다면 증가하게 된다. FD 보존이 중요한 이유는 FD가 어떠한 관계성을 나타내기 때문이다.
+		그래서 BCNF보다 조금 weak 하지만 FD의 보존이 향상된 third normal form, 3NF가 등장한다.
+
+Third Normal Form(3NF)
+
+	하나의 릴레이션 스키마 R이 3NF이다. when? F+에 있는 모든 A -> B 함수적 종속이 적어도 다음 3가지 조건 중 하나를 만족할 때.
+	조건이 하나 늘어서 더 복잡해 보이지만 하나만 만족해도 3NF이기 때문에 오히려 BCNF보다 더 까다롭지 않다.
+	당연히 BCNF이면 3NF이다.
+		1,2번 조건은 BCNF와 동일하다.
+		3. (어려움 주의) A -> B라는 FD에 대해서 (B-A)의 각각의 attribute A가 전체 릴레이션 R의 후보키에 포함이 돼야된다.
+			3번 조건이 FD를 보존하기 위해 추가된 조건이다.
+
+	다른 책들은 이행 종속, 즉 A -> B, B -> R 이면 A -> R 이런 관계가 없도록 만드는 것이 3NF다 라고 정의한다고 한다.
+	즉 3NF에 맞춰 Decompose된 릴레이션들은 이행 종속이 없다는 뜻인데, 그것이 바로 3번 조건이 말하고 싶은 내용이다.
+	
+
+Higher Normal Forms (그 중에서 4NF) : 
+	BCNF의 형태를 지킨 릴레이션이 항상 효율적으로 정규화되지는 않는다. BCNF의 form을 가진 릴레이션 중 다음과 같은 경우가 있다고 하자.
+	만약 99999라는 ID를 가진 William과 David가 있다면 새로운 휴대폰 번호를 99999에 할당할 때
+	David와 William 두명에게 다 할당을 해줘야 한다. 즉 쓸데없이 삽입의 횟수가 늘어나게 된 것이다. 이런 것을 Insertion Anomalies라고 한다.
+	따라서 이런 비효율성을 보충해주기 위해 등장한 것이 4NF(뿐만 아니라 Higher NF들이 나온 이유)이다. 이건 나중에 살펴본다고 한다.
+	
+
+	여태까지 Form들을 볼 때 다들 F를 고려하지 않고 F+를 고려했다. 당연히 super set이니까 그렇겠지? 
+	그러면 closure를 어떻게 찾을까? 
+
+		암스트롱의 공리(Amstrong's Axioms) : 
+			1. reflexivity : 만약 B가 A에 속하면 A -> B이다.
+			2. augmentation : 만약 A -> B이면 AR -> BR이다.
+			3. transitivity : 만약 A -> B이고 B -> C이면 A -> C이다.
+		(추가내용 파일에 있던 것들. 이것들을 이용해서 closure를 찾을 수 있다.)
+		이 공리만 사용하면 더 이상 숨어있는 FD를 찾을 필요가 없어서 굉장히 powerful하다고 한다.
+
+		ex) R(A,B,C,G,H,I)
+		     F(A->B, A->C, CG->H, CG->I, B->H)
+
+			1. A -> H (transivity)
+			2. AG -> I
+				이건 자세히 살펴보자. 먼저 F에 있는 A -> C에 G를 augmentation하면 AG->CG가 된다.
+				그리고 CG -> I FD와 transitivity에 의해 AG->I가 도출될 수 있다.
+			3. CG -> HI
+				이것도 자세히 살펴보자. 먼저 CG -> I 에 CG를 augmentation하면 CGCG->CGI가 된다.
+				(CGCG는 CG이다.) 이어서 CG -> H에 I를 augmentation하면 CGI -> HI가 된다.
+				여기서 transitivity에 의해 (CG -> CGI -> HI) CG -> HI가 도출된다. 
+			
