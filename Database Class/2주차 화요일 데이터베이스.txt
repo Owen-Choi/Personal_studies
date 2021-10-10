@@ -34,15 +34,16 @@ MYSQL
 		각각의 속성의 도메인 값
 		무결성 제약조건
 		
-		indices : 검색을 빠르게 해주기 위한 것? 정확히 못들었다....
+		indexes : 검색을 빠르게 해주기 위한 것? 정확히 못들었다....
 		릴레이션에 관한 보안과 권한 정보
 		데이터를 실질적으로 어떻게 디스크에 저장을 할지
 		등을 DDL을 통해 정의할 수 있다.
 
+
 	Domain types in SQL		// 데이터 타입
 		
 		char(n) - 고정 길이(n)의 문자열, n은 당연히 지정 가능(예를 들어 학번처럼 길이가 정해져있는 값)
-		varchar(n) - 최대 길이가 n인 가변길이의 문자열
+		varchar(n) - 최대 길이가 n인 가변길이의 문자열 : 사용한 만큼 길이가 늘어난다.
 		int - 정수
 		numeric(p,d) - 자리수 p, 소숫점 이하 자리수 d, 즉 numeric(3,1) 이면 44.5는 되지만 444.5는 안된다.
 		real, double precision : 자바에서 double과 같음
@@ -52,8 +53,8 @@ MYSQL
 		-------------------------------
 
 		create table department (
-			dept_name	varchar(20)
-			building		varchar(15)
+			dept_name	varchar(20),
+			building		varchar(15),
 			budget		numeric(12,2),
 			primary key(dept_name));
 
@@ -64,7 +65,7 @@ MYSQL
 
 		create table instructor(
 		ID		varchar(5),
-		name		varchar(20),not null,
+		name		varchar(20) 	not null,
 		dept_name	varchar(20),
 		salary		numeric(8,2),
 		primary key(ID),
@@ -87,4 +88,35 @@ MYSQL
 		mysql에서는 경로 간 구분을 백슬래쉬가 아니라 슬래쉬로 한다고 한다. 학생들이 이 관련 질문이 굉장히 많다고 함.
 		다음주까지 데이터베이스 설치해오깅~
 
+
+	<추가내용>
+	DDL : 어떤 스키마를 정의하기 위한 랭귀지.
+		DDL은 Data dictionary에 저장된다.(데이터 사전)
+	데이터 사전에는 메타데이터를 포함한다.
+	스키마, 무결성 조건, 권한, 키 정보 등이 데이터 사전에 포함된다.
+
+	DML : 우리가 흔히 아는 쿼리문. Select From....
+		DML은 선언적이다. (비 절차적이다)
+		검색을 위해서 절차를 모두 쓰지 않고 찾을 것만 바로 선언한다.(네이버/구글 검색)
+
+	
+	<추가내용>
+	데이터를 선언만 하면 알아서 데이터를 찾아준다. 이 기능은 쿼리 프로세서를 통해 가능하다.
+	쿼리 프로세서는 다음과 같은 과정을 통해 데이터를 찾는다.
+		Parsing and translation : 작성된 쿼리에 문제가 있는지 검사하고 없다면 파싱한다.
+		Optimization : 어떤 방법이 가장 좋은 지는 현재 데이터베이스의 상황에 따라 다를 수 있기 때문에 최적의 방법을 찾는다.
+		Evaluation : Cost가 가장 적은 방법을 수행하고 결과를 출력한다.
+
+	Transaction : 데이터베이스에서 동작하는 하나의 로지컬한 함수들의 집합.
+		쉽게 말하면 데이터베이스의 상태를 변화시키기 위해 수행하는 작업의 단위이다.
+		==> A collection of operations that performs a single logical function in a database application 
+
+		트랜잭션은 다음과 같은 특징을 가진다.
+			1. 원자성 : 트랜잭션이 데이터베이스에 모두 반영되던가, 아니면 아예 반영되지 않아야 한다는 것.
+			2. 일관성 : 트랜잭션의 작업 처리 결과가 항상 일관성이 있어야 한다는 것.
+			3. 독립성 : 둘 이상의 트랜잭션이 동시에 실행되고 있을 경우 어떤 트랜잭션도 다른 트랜잭션의 연산에 
+				끼어들 수 없다는 것이다.
+			4. 지속성 : 트랜잭션이 성공적으로 완료되었을 경우 결과는 영구적으로 반영되어야 한다는 것.
+	Transaction manager : 일종의 모듈, 굉장히 많을 수 있는 transaction들이 일관성 있는 상태로 유지되도록 하는 역할을 한다.
+		==> 여러 종류의 시스템 실패들(전력, 운영체제, 트랜잭션 문제들)에 대비해서 데이터베이스를 일관된 상태로 유지함. 
 		
