@@ -370,3 +370,4 @@ Multivalued dependency를 다루는 Decomposition
 				==> 나머지들
 
  
+	==> 과제하면서 본 점 : 4NF로 decomposition할 떄 A->>B라면 이 두개를 합치는 분해를 한다. 위에서 얘기했던 내용이지만 다시 짚고 넘어가자.
