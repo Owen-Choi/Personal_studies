@@ -278,3 +278,95 @@ testing for 3NF
 			이 로직에 따라 R2는 R3에 포함이 되기 때문에 없애준다.
 		
 		이 연산의 결과로 남은 R1과 R3가 3NF를 만족하게 된다! 
+
+	3NF에서는 
+		Decomposition is lossless
+		Dependencies are preserved
+
+	BCNF에서는
+		Decomposition is lossless
+		it may not be possible to preserve dependencies
+
+
+
+Multivalued dependency를 다루는 Decomposition
+	
+	한 attribute에, 만약 전화번호라는 attribute가 있다면 전화번호가 여러개 들어갈 수도 있다.
+	관련 예제는 ppt 참고. 이 예제는 BCNF를 만족하는데,  non-trivial 한 FD가 없다.
+	하지만 여기에는 문제가 있는데, Insertion anomaly가 생기다고 했었다.
+	한개에만 넣으면 되지만 쓸데없이 두개에 다 넣어줘야 하는 상황인 것이다.
+	이걸 막기 위해서 4NF를 사용했었다.
+
+	Multivalued dependencies : MVDs
+
+		그냥 이 부분은 ppt 65.p 보면서 이해하자. 
+
+		a = ID, b = phone
+		
+			t1[a] = t2[a] = t3[a] = t4[a] = 99999로 모두 동일하다
+			t3[b] = t1[b] = 512-555-1234로 동일하다
+			t3[R-b] = t2[R-b] = (99999, William)으로 동일하다
+			t4[b] = t2[b] = 512-555-4321로 동일하다
+			t4[R-b] = t1[R-b] = (99999, David)로 동일하다
+		이런 테이블을 그냥 멀티벨류드 테이블이라고 한다. 당연한 것,
+
+		저 테이블에서 ID = Y, name = Z, phone = W라고 하면
+		우리는 Y ->> Z (Y multidetermines Z) 라는 것을 알 수 있다.
+		(위 관계는 함수는 아니.다함수는한개의 숫자에 한개만 매핑이 되기 때문)
+		위 예제에서 Y ->> Z는 Y->>W를 따른다고 한다.
+
+		Y의 value가 주어졌을 때 그것은 Z의 value와 W의 value와도 관계가 있다는 것을 알 수 있음.
+		그런데 여기서 Z와 W는 서로 독립적이고, 영향을 주고받지 않는다.
+
+		만약 Y->Z이면 Y->>Z도 성립한다. (역은 성립하지 않음)
+			==> Z는 Y에 의해서 좌지우지되고, 그 Z가 여러개여도 좌지우지되는 건 똑같다고 한다.
+
+		만약 a ->> b이면 a->>R - a - b도 성립한다.
+			==>그냥 참고만 하랜다.
+
+		우리는 MDVs를 2가지 방법으로 사용할 수 있다.
+			1. 주어진 함수적 종속과 다중값 종속관계가 적법한지 검사하기 위해서 사용 
+			2. 적법한 릴레이션의 집합에서 제약조건을 명시하기 위해서 사용될 수 있음
+
+4NF
+
+	4NF를 설명하기 위해 위를 소개한 것 같다,
+	핵심은  insertion anomaly를 제거하기 위한 것.
+	만약 D가 Functional , Multivalued dependy의 집합이고, D+에서 a->>b라는 multivalued dependency를
+	뽑았다고 할 때 아래 조건 2가지 중 하나라도 만족하면 4NF이다.
+		1. a ->> b가 trivial하다.(a U b = R이면 trivial하다고 한다.) 
+		2. a가 R에 대해서 sueprkey이다.
+
+4NF의 decomposition
+
+	Restriction of multivalued dependencies : 
+		Ri의 restriction에 해당하는 D는 Di라고 부를 수 있다.
+		restriction의 내용은 다음과 같다.
+			1. D+의 모든 FD는 Ri의 Attribute만을 포함해야 한다.
+			2. 모든 multivalued dependencies 가  a->>(b^R)의 form을 가질 떄
+				==> 조건은 ppt에서 보자
+		이런 경우 Ri에 대한 Di라고 할 수 있다.
+
+		그리고 이 Di와 Ri는 4NF decomposition algorithm에서 사용된다.
+
+	ex)	R = (A,B,C,G,H,I)
+		F = (A->>B, B->>HI, CG->>H)
+		여기서 R은 4NF가 아니다. A->>B의 A가 R의 super key가 아니기 떄문.
+		이런 경우 A->>B에서 A,B를 묶어버린다.
+			R1 = (A,B)
+		그리고 쓰도코드의 공식을 사용하면 R2는 다음과 같이 나온다.
+		(공식이 대충 (a-R1) U (R-b)뭐 이런 식이었는데 제대로 못봤다)
+			R2 = (A,C,G,H,I)
+				==> R2는 4NF가 아니다. non-trivial이고 superkey가 아니다. 따라서 다시 R3과 R4로 나눈다 
+			R3 =  (C,G,H)
+				==>CG->>H를 a와b로 보고 묶어서 나옴.
+			R4 = (A,C,G,I)
+				==> 4NF가 아님. 다시 R5와 R6로 나눔
+			R5 = (A,I)
+				==> 와 진짜 이건 설명을 들어도 무슨 말인지를 모르겠다.
+				A->>B와 B->>HI를 통해서 A->>HI가 유추되고, R4에 H가 없어서
+				R4에 Restriction으로 A->>I가 된다 라고 하는데 이게 대체 무슨 말이지....
+			R6 = (A,C,G)
+				==> 나머지들
+
+ 
