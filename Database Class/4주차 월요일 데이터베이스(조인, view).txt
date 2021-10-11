@@ -106,10 +106,13 @@ Join :
 
 	Transactions
 		sequence of query. and/or update statement. 작업의 단위 정도로 생각할 수 있다.
+			<추가내용>
+			a collection of operations that performs to change database
+			a unit of work		
 		특징들 : 
-		Atomic transaction
+		Atomic transaction(원자성)
 			일어나거나, 일어나지 않거나. 이 2가지로 원자성을 가진다. (더 쪼개질 수 없음)
-		Isolation 
+		Isolation (독립성과 같은 개념으로 해석하면 될려나?)
 			동시에 여러 transaction들이 있을 때, 현재 transaction이 작업을 완료할 때 까지 다른 transcation들이 접근할 수 없음을 의미
 		항상 commit, rollback 둘 중 하나가 실행되어야 transaction이 종료된다. 	
 
