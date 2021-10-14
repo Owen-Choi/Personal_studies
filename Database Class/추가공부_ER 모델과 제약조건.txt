@@ -66,7 +66,7 @@ Structural Constraint(구조적 제약조건) :
 
 	구조적 제약조건은 (MIN, MAX)의 방식으로 relationship을 나타내는 것이다.
 	강의에서는 0..*, 1..1 이렇게 나타냈는데, 이게 실상은 (MIN, MAX)와 동일하다.
-	
+	==> cardinality constraint를 나타내는 다른 방법.	
 
 Weak Entity(약한 개체), Identifying relationship type(식별 관계성 타입)
 
