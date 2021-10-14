@@ -49,4 +49,18 @@ table anomalies in book_exercise database
 	Domain : 하나의 속성이 갖는 값들의 집합
 	즉 취미라는 Attribute의 도메인은 영화, 음악, 게임 등이 될 수 있다.
 	이 1형을 만족해야 관계형 데이터베이스의 릴레이션이 될 자격이 생긴다.
-		
+
+
+의존성 보존 분해
+
+	의존성 보존 분해의 핵심은 (R1U R2 U R3 U ...... U Rn)+ = F+이다.
+	그리고 이것을 이용한 내용을 살펴보자.
+ ex)
+
+	R1 = (A, B, C) with FDs  F1 = {A -> B, A -> C}, and
+	R2 = (C, D) with FDs  F2 = {C -> D}.
+      	F' = F1 ∪ F2 = {A -> B, A -> C, C -> D}
+      	so, F' = F. 
+      	And so, F'+ = F+.
+
+	와 그래도 8.13은 모르겠다.

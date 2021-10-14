@@ -13,6 +13,7 @@ complex attribute
 
 	쪼갤 수 없는 simple attribute가 아닌 것은 모두 컴플렉스 어트리뷰트다.
 	관계형 데이터베이스에서는 simple attribute만 허용한다.
+	==> 제 1 정규형 관련? 
 	컴포지트? 컴플렉스? 그냥 단어 차이겠지?
 		==> composite attribute는 complex attribute 중 하나인 것이라고 한다.
 	
