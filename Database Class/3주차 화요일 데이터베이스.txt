@@ -73,13 +73,25 @@ Aggregate function : 집계함수, 통계함수
 	Nested Subqueries
 		쿼리 안에 쿼리가 있는 경우. Select 문장 안에 Select문장이 있는 경우
 			ppt 45참고 : 안쪽에 있는 select 문을 먼저 실행을 시키고 밖에 있는 select문 실행하기
-			
+		<추가내용>
+		서브쿼리를 왜 써야할까?
+		select * from userTable where height > (select height from userTable where addr='경남')
+		만약 주소지가 경남인 사람보다 키가 큰 사람의 정보를 찾는 다음과 같은 쿼리가 있다고 생각해보자.
+		이 경우에 경남에 사는 사람이 여러명이라면 오류가 난다. 비교대상이 명확하지 않기 때문.
+		이럴 경우에 서브쿼리를 써야한다. 서브쿼리로 테이블을 받고, 그 테이블안에서 또 비교를 수행하는 느낌 			
+
 		Some 
-			마찬가지로 중첩된 쿼리문의 구조를 띄는데, 의미는 다음과 같다.
+		<추가내용>
+		ANY와 같은 맥락인 듯 하다. IN과도 기능이 거의 같은데, 차이는 IN은 연산자가 "="밖에 없지만 Some은 여러가지 연산을 수행할 수 있다.
+		즉 ANY 혹은 SOME이 =의 연산만 수행한다면 IN으로 대체 가능하다.
+		Some(=Any)은 열거된 조건중에 하나라도 성립을 하면 true를 반환한다. 
+			마찬가지로 중첩된 쿼리문의 구조를 띄는데, 의미는 다음과 같다. ==> 이것도 선택이다. 그렇게 만들어도 되고 아니어도 된다.
 			where salary > some(select salary from instructor where dept_name = 'Biology');
 				오른쪽의 select문의 결과 중 하나라도 조건을 만족하는 것이 있다면 결과를 출력한다.
 		
 		all
+		<추가내용>
+		열거된 조건을 모두 만족해야 한다.
 			some은 하나라도 만족을 하면 출력이 됐지만 all은 모든 tuple이 만족을 해야 출력한다.
 
 		exists
@@ -105,8 +117,8 @@ Modification of the Databases
 			delete from instructor;
 				==> instructor 안에 있는 모든 tuple을 없애라.
 			where절을 추가하면 조건을 만족하는 값만 제거할 수 있다.
-
 			54 : select문 연산으로 생성된 테이블의 결과에 포함이 되는 값만 없애기
+			
 
 		Insertion
 			insert into course
