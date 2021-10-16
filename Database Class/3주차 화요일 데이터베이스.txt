@@ -98,6 +98,9 @@ Aggregate function : 집계함수, 통계함수
 			여태까지는 안쪽의 select문을 먼저 실행했지만 exists 문은 살짝 맥락이 다른 것 같다.
 			ppt 49참고 : 밖에서 attribute 정보를 받아오던가 해서 exitsts 조건을 실행하고 조건을 
 			만족하는 값이 '존재'한다면 출력한다. : 15번 실행됨, 15^2 아님
+		<추가내용>
+		exists의 연산 순서는 메인쿼리 -> 서브쿼리 이다. 즉 서브쿼리에서 메인쿼리의 정보를 사용할 수 있다.
+		하지만 IN의 연산 순서는 서브쿼리 -> 메인쿼리이다. 즉 서브쿼리에서 메인쿼리의 정보를 사용할 수 없다.
 
 		not exists
 			결과가 없으면 출력을 하고 있으면 출력을 하지 않는다. 즉 exists와 완전히 반대기능
@@ -132,3 +135,10 @@ Modification of the Databases
 			set salary = salary * 1.03
 			where salary > 100000;
 				말 그대로 값을 업데이트 한다.
+
+		RENAME
+			ALTER를 통해서 바꿀 수도 있지만 mysql은 RENAME명령어를 제공한다.
+			RENAME old_name TO  new_name;
+
+			+ alter : 
+				ALTER TABLE old_name RENAME new_name;
