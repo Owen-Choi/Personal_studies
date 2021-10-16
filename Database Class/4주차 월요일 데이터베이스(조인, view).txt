@@ -46,6 +46,18 @@ Join :
 				==> 아! CS라는 이름을 가진 dept가 여러개 있고, 그것들의 어떤 값을 더해서 표에 나타내야 할 때
 				CS : 총합 이런 식으로 한번씩만 나와야 하니까 쓰는거구나.
 
+	<추가내용>
+	GROUP BY와 VIEW의 사용 예시를 한번에 보자.
+	hw 4.14. 모든 학생들이 얻은 총 학점을 연도별로 타나내는 view를 만들어라.
+
+		CREATE VIEW tot_cred AS
+		   SELECT year, SUM(CASE grade WHEN NULL THEN 0 ELSE credits END) AS num_credits
+	 	   FROM takes NATURAL JOIN course
+		  GROUP BY 1;
+
+		※ MYSQL에도 decode가 있지만 오라클의 decode(대상, 조건, true, false)와는 기능이 다르다.
+		따라서 같은 기능을 수행하고 싶다면 CASE WHEN을 사용해야 한다.
+		
 			view로 테이블을 미리 만들어놓고 다시 불러와서 쓰는 개념. 잘 기억해두자.
 
 			뷰의 정의를 위해 다른 뷰가 사용될 수도 있다. 만약 v1의 정의를 위해 v2가 사용됐다면, v1은 v2에 의존적이다(depend on)

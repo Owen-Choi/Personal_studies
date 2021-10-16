@@ -49,10 +49,14 @@ Design approaches
 		composite : 쪼갤 수 있는 것.
 		single-valued / multi-valued
 			==> 누군가는 전화번호가 여러개일 수 있다.
+		<추가내용>
+		multivalued, composite는 원 두개를 겹쳐서 나타낸다.
 
 		Derived attribute : 
 			생일 attribute가 있다면 나이 attribute는 유추할 수 있다. 여기서 나이가 derived
 			반대 개념으로는 Base attribute가 있다.
+		<추가내용>
+		Entity는 원으로 나타내는데, 이 derived attribute같은 경우는 점선, 즉 점선으로 이루어진 원으로 나타낸다.
 	
 	Composite attribute : 
 		이름은 성과 이름으로 다시 나눠진다. 
