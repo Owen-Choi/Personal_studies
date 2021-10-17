@@ -1,0 +1,106 @@
+Drawbacks of filesystem
+
+	1. Data redundancy and inconsistency
+
+	2. Data isolation
+	
+	3. Difficulty in accessing data
+		
+	4. Itegrity problems
+		==> 제약조건을 두기가 어렵다
+	5. Atomicity of updates
+		==> 어떤 일이 같이 일어나거나 아예 일어나지 말아야 한다. 데이터 불일치로 이어짐.
+	6. concurrent access from multiple users
+	
+	7. Security problems
+		==> 보안상의 문제로 특정 데이터를 보여주고 싶지 않을 때 파일시스템에서는 그것이 힘들다.
+
+Logical schema
+
+	Overall logical structure of the database
+
+Physical schema
+
+	Overall physical structure of the database
+
+Instance
+	
+	Actual content of the database at a particular time
+
+Physical data independence
+
+	Ability to modify physical shema without changing logical shema
+
+Datamodel 
+	
+	A collection of tools for describe database
+
+Data dictionary
+	
+	Contains metadata, like database shema, constraints, authorizations
+
+Design approaches
+
+	two : 
+		ER model
+		Normalization
+
+Store manager 
+
+	A program module that provides the interface between low-level data
+	and the application programs and queries
+
+Query processor
+
+	the query processor is the subcomponent of the data server
+	there's three steps in it
+		parsing and translation
+		optimization
+		evaluation
+
+Transaction
+
+	A collection of operations that provides a single logical function
+		in a database application
+
+Transaction manager
+
+	Ensures that the database remains in a consistent state despite 
+	system failures and transaction failures
+
+Concurrency controll manager
+
+	control the interaction among the concurrent transactions, to ensure
+	consistency of the database
+
+
+
+2장
+
+Union compatibilty
+
+	two relations are union compatible if they have same number of attributes
+	and each attribute is from the same domain
+
+
+5장
+
+entity : a "thing" or "object" that is distinguishable from other objects
+
+	entity는 instrcutor, student 각각을 뜻하고,
+	entity set은 instructor and student 이렇게 묶음. 
+
+E-R 모델의 기본 3가지 개념
+
+	1. Entity sets
+	2. Relationship sets
+	3.  Attributes
+
+	헷갈리지 말 것 : Attribute의 type중
+		single / multi valued
+		simple / composite 이 있는데,
+		
+		single, multivalued는 값이 하나인가 여러개인가의 문제이고,
+		simple, composite는 그 의미가 쪼개질 수 있는가 없는가의 문제이다.
+	 
+ 
