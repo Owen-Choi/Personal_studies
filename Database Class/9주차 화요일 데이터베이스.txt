@@ -1,0 +1,51 @@
+static hashing
+
+	DB에서는 hash function의 결과로 Bucket(레코드들이 들어있는 블록)를 반환한다.
+	hash file organization에서는 하나의 테이블을 여러개의 버켓으로 나눈다. 
+		그럼 특정 튜플을 어느 버켓에 저장을 할 것이냐~?
+		그것은 hash function이 결정한다. hash값이 5가 나오면 5번 버켓, 1이면 1번 버켓에 저장한다.
+	
+	hash function의 ideal : search key가 어떤 값이 들어오든 uniform, 즉 균등하게 버켓에 분배된다.
+			  Random : search key값이 어떤 값은 많을 수 있고 어떤 값은 적을 수 있듯 분포를 가지고 있는데
+				이 것을 랜덤하게 분산시킬 수 있다. 요약하자면 search key가 많더라도 해쉬의 결과는 이 분포와는
+				별개로 많이 분포되지 않는다.
+	
+	hash function의 worst : 항상 하나의 결과를 return : 한 버켓에 모든 값이 모임.
+
+	ideal한 경우는 우리가 구현할 수 없다.
+	일반적인 경우는 어떤 버켓은 텅텅 빌 수도 있고, 어떤 버켓은 꽉 찰수도 있다. 
+
+		Bucket overflow : 버켓이 넘치는 경우
+			원인 : 	버켓의 사이즈가 너무 작음.
+				search key의 해쉬 결과가 몰림. -> hash function의 문제
+
+		이것을 어떻게 해결할까?
+		Overflow bucket의 사용 : 1번 버켓이 넘치면 1번 버켓과 연결된 overflow bucket을 만들어 그 곳에 넣는다.
+				이렇게 linked list처럼 연결된 형태의 버켓을 overflow chaining이라고 부른다.
+				
+			Overflow chaining의 문제점은 이 값들은 모두 해쉬값이 같기 때문에 일일이 검사해야 한다.
+				overflow bucket이 길어지면 길어질 수록 효율성이 떨어진다. 
+	
+		버켓 안에 튜플이 아니라 인덱스가 들어가면 그것을 hash index라고 한다.
+		이럴 경우 버켓 안에는 index entry만 들어간다.(대표값과 포인터)
+
+	그렇다면 static hashing은 뭘까
+		만약 특정 버켓에 몰리게끔 설계된 해쉬를 사용하면 많은 문제점이 있다.
+		이것을 고치는 하나의 방법은 해쉬 함수를 다시 설계하고 데이터베이스 전체를 재구성하는 것인데, 이것은 비용이 비싸다.
+		두번째 방법은 필요할 때만 동적으로 테이블의 튜플들을 조정하는 것이다.
+			==> Dynamic hashing
+
+	Dynamic hashing :
+		Extendable hashing :
+			해쉬 값의 프레픽스로 몇개의 비트만 볼 지 정한다.
+			ppt 참고, 설명을 잘 못들었다...
+		Music의 경우 해쉬값이 0으로 시작한다. 따라서 0번 버킷 안에 Music을 포함한 row를 넣는다. (prefix 길이가 1이기 때문)
+		이 과정을 반복하다가 버켓이 가득 차면 prefix의 길이를 하나 증가시킨다. 
+		그리고 이때 버켓에 들어가있는 값들은 새로운 prefix 길이에 맞춰 다시 분배해준다.
+		물론 prefix의 길이가 계속해서 늘어나면 안된다.
+			따라서 prefix의 길이에 제한을 두고, 이후에 발생하는 overflow에 대해서는 prefix의 길이를 늘리지 않고
+			overflow bucket을 만든다. (overflow chaining)
+
+		어떤 특정 하나의 값을 검색할 때는 hash index가 훨씬 좋다.
+		하지만 range query에 대해서 검색을 할 때는 해쉬는 쓸 수가 없고 B+ 트리를 쓰게 된다.
+		
