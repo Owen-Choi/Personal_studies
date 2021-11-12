@@ -1,0 +1,223 @@
+쿼리 프로세싱
+	
+	쿼리 프로세싱은
+	parsing and translation
+	optimization
+	evaluation
+	3가지 단계로 이루어진다.
+
+	parsing and translation을 통해 쿼리문을 관계대수식으로 바꾸고, 실제로 있는 값에 대한
+	것인지 등을 검사한다.
+	
+	optimization은 관계대수 연산식을 계산하기 위한 가장 좋은 방법을 찾는 과정이다.
+		Query optimization
+			모든 관계대수 식 중에서 cost가 가장 적은 식을 선택하는 것.
+			cost는 통계정보를 토대로 계산.(튜플의 개수, 크기 등)
+	evaluation은 실행단계로, 앞의 두 단계를 거친 관계대수 연산식을 실행한다.
+		실행은 항상 트리구조의 가장 아래 노드에서 루트 쪽으로 실행된다고 한다.
+
+	Cost의 개념 : 
+		블럭을 이동하는 시간이 tt, seek하는 시간이 ts이다.(일단은 두개만 있다고 가정)
+	
+	Selection Operation
+		A1 : linear search
+			장점 : selection 조건과 파일 내의 tuple들의 순서, index의 가용 여부에
+				관계없이 사용할 수 있다.
+			단점 : 테이블 전체, 또는 반을 읽어야 하므로 disk access 비용이 크다.
+		
+		 secondary index : 테이블 불러오기, 검색 키 attribute A값에 따라 정렬되어 있지
+				않은 경우
+
+		index scan
+			A2(primary index, equality on key)
+				검색키가 primary key인 경우에 대한 알고리즘이다.
+				학번(기본키) = '12345' 와 같은 경우.
+				cost는 (hi(B+트리의 height) + 1) * (tt + ts)이다.
+				
+			A3(primary index, equality on non-key)
+				검색키가 primary key가 아닌 경우에 대한 알고리즘이다.
+				학과 = '소프트웨어학과'와 같은 경우.
+				{hi * (tt + ts)}(B+트리의 access cost) + ts + tt * b
+			
+			A4(secondary index, equality on non-key)
+				검색키가 primary키가 아니지만 candidate key인 경우.
+				A2 알고리즘과 비용이 동일하다.
+				검색키가 candidate key가 아닌 경우.
+				tuple들이 분산되어 저장되어있기 때문에 조건을 만족하는 
+				튜플의 개수가 n개라면
+				cost = (hi + n) * (tt + ts)로 굉장히 비싸다. 
+		
+		대소 비교에 대한 알고리즘
+			A5(primary index, comparison)
+				A>=V인 경우 인덱스를 이용해서 A>=V인 첫 값을 찾고
+				그 다음부터 순서대로 scan하면 된다.
+				A<=V인 경우 인덱스를 사용하지 않고 A>V인 튜플이 나올 때
+				까지 scan한다.
+
+			A6(secondary index, comparison)
+				A5 알고리즘에서 entry와 pointer의 개념이 추가됨.
+		
+	여러개의 조건에 대한 selection 연산
+
+		모든 조건이 and로 연결된 conjuntion 연산에 대해 : 
+			A7(conjunctive selection using one index)
+			A2-A6중에서 가장 비용이 적은 것을 고름.
+			
+			A8(conjunctive selection using composite index)
+			composite index가 존재할 경우 그 index를 이용하여 A7 알고리즘과
+			유사하게 처리한다고 함.
+
+			A9(conjunctive selection by intersection of identifiers)
+			여러 조건에 대하여 index를 이용할 수 있는 경우.
+			index를 이용할 수 있는 각 조건을 만족하는 tuple들에 대해 pointer를
+			모두 구하고 그 pointer들의 교집합을 구함. pointer들을 따라가 
+			block을 access하면 disk IO가 발생하므로 tuple들 대신 pointer들의
+			교집합을 구하는 것. 이렇게 구해진 pointer들을 이용해서 
+			tuple들을 검사하고 나머지 조건들을 검사함!
+
+		모든 조건이 or로 연결된 disjunction 연산에 대해 : 
+			A10(disjunctive selection by union of identifiers)
+				만약 모든 조건에 대하여 index가 있다면 인덱스를 이용하여
+				각 조건을 만족하는 tuple들에 대한 pointer를 구하고 
+				모든 pointer들의 합집합을 구하고 각각의 pointer를 따라가
+				tuple들을 access 한다.
+				하나의 조건이라도 index가 없다면 A1과 같이 전체 테이블을
+				순차적으로 scan하여야 함.
+
+	sorting : 
+
+		대상 테이블에 대하여 B트리를 생성하고 단말 노드를 앞에서부터 순차적으로
+		scan함으로서 sorting된 순서로 tuple들을 access할 수 있다.
+		하지만 이러한 방법은 index를 생성하고 그 후에 각 tuple을 access 함에 있어서
+		disk IO가 많이 발생할 수 있다는 단점이 있다. 
+		메모리 내에 테이블이 모두 올라올 수 있다면 quick sort와 같은 효율적인 알고리즘
+		을 사용할 수 있다. 하지만 테이블이 모두 올라오지 못한다면 external sort-merge
+		알고리즘을 써야한다. 관련 시각자료 및 쓰도코드는 ppt 참고.
+
+		결론적으로 external merge sort의 cost는 br(2[logM-1(br/M)] + 1)이다.
+
+
+Join Operation
+
+	조인을 구현하기 위한 알고리즘들 :
+		Nested loop join
+		Block nested loop join
+		indexed nested loop join
+		merge join
+		hash join
+		
+	student table(record : 5000개, 블럭개수 100개)
+	takes table(record : 10000개, 블럭개수 400개)
+	이 두 테이블을 예시로 보겠다.
+
+	Nested loop join
+	
+		중첩된 2개의 for loop를 이용해서 한쪽 테이블의 각 record에 대하여
+		다른쪽 table의 record가 조건을 만족하면 출력하는 간단한 알고리즘이다. 
+
+		바깥 for loop 테이블을 outer relation, 안쪽은 inner relation이다.
+		장점 : 
+			index가 필요없고, 어떠한 조건에 대해서도 사용 가능한 알고리즘
+		단점 : 
+			두 테이블 내에 모든 튜플의 쌍을 비교해야 하므로 비용이 크다.
+
+		nr은 테이블r의 tuple개수, br은 테이블 r의 블록개수.
+		만약 두 테이블 중 작은 쪽이 모두 메모리에 올라간다면 그 테이블을 inner relation으로
+		해야한다. 이 경우 비용은 br + bs 의 block transfer와 2번의 seek만 필요하다. 
+		
+		테이블 r(outer)의 첫번째 tuple에 대하여 테이블 s(inner) 전체를 읽고,
+		두번째 tuple에 대하여 s 전체를 읽고.....
+		테이블 s를 총 nr번(r의 튜플 개수)읽어야 한다.
+
+		요점은 큰 테이블을 outer relation으로 두는 것이 유리함.
+		
+	Block nested loop join
+
+		nested loop join은 outer relation r의 각 tuple에 대하여 inner relation s를 
+		한번씩 access 하는데에 반하여 block nested loop join은 테이블 r의 각 블록에
+		대하여 테이블 s를 한번씩 access하여 전체 블록 전송의 횟수를 크게 줄인 것이다.
+		
+		r의 첫번째 블럭에 대하여 s전체를 읽고, 두번째 블럭에 대하여 전체를 읽고....
+		s를 br번 access하면 된다. 		
+		기타 성능 향상법은 ppt 참고.
+
+	Indexed nested loop join
+	
+		앞에서 본 두 join법은 모두 대상 테이블을 scan해야 하므로 질의비용이 크다.
+		만약 조인이 자연 조인 혹은 equi 조인이라면, 그리고 inner relation에 인덱스가
+		형성되어있다면 전체 테이블을 스캔하지 않아도 된다. 
+		// equi join과 자연조인에 대해서만 가능하다.
+		Indexed nested loop join의 cost는 
+			br(tt + ts) + nr * c 이다.
+			br은 outer relation r의 블럭개수, tt, ts는 전송시간과 seek 시간,
+			c는 selection시간이다. 
+		이 join 알고리즘에서는 작은 테이블을 outer relation으로 두는 것이 좋다.
+		br값을 줄일 수 있기 때문. 
+
+	Merge join
+	
+		두 테이블이 모두 join attribute에 대하여 sorting이 되어있어야 하며
+		그렇지 않을 경우 먼저 sorting을 해야한다. 
+		ppt 참고, a1을 기준으로 join한다면 a1은 sort 되어있어야 한다. 
+		
+
+	Hash join
+	
+		equi join과 자연조인에 대해서만 적용할 수 있다. 
+		같은 hash함수 h를 이용하여 두 테이블의 tuple들을 분리한다.
+		hash 함수h는 join attribute값을 0부터 n까지의 정수 중 하나의 값으로 변환한다.
+		만약 해쉬함수 h(tr[JoinAttrs])의 값이 i라면 tr은 ri의 파티션에 들어간다.
+		요점은 해쉬함수의 결과로 나온 값의 파티션에 있는 튜플들이랑만 비교하면 된다는 것.
+		
+		해쉬함수의 설정은 각 파티션이 골고루 차게 하는 것이 바람직하지만 그런 해쉬함수는
+		만들기 어렵다. 실제로는 채워지지 않는 파티션도 많이 있다. 
+		따라서 파티션을 실제보다 조금 더 만들고, 이 "조금 더"가 f, fudge factor이다.
+		
+		overflow 
+
+		특정 파티션에 투플들이 몰리면 overflow가 생김.
+		
+		overflow resolution은 overflow가 발생하면 그때 처리하는 방법
+			오버플로우가 생긴 파티션 si에 대해서 다른 해쉬함수를 이용하여
+			또 다시 파티션을 만드는 방법. 
+		overflow avoidance는 overflow를 예방하는 방법 
+			사전에 작은 크기의 파티션을 많이 만든 뒤에 오버플로우가 생기지 않게
+			작은 파티션들을 합쳐가는 방법이다.
+
+		Cost 
+			해쉬 조인에 대한 비용의 계산은 매우 복잡함, 교수님께서 ppt 참고하라고 하심.
+			
+			ex : 메인 메모리 블럭 사이즈 M을 20개라고 가정.
+			student 테이블을 build input으로 이용. 
+			즉 student 테이블의 각 파티션에 대하여 검색을 빠르게 수행하도록
+			임시 hash index를 생성.
+			메모리 블록 사이즈가 20이므로 각 파티션의 크기를 20블록으로 하면
+			5개의 파티션을 생성하게 된다. 동일하게 takes 테이블도 5개의 파티션
+			을 생성한다. 
+			
+			ppt의 비용 계산은 앞 슬라이드를 참고해서 하라는 교수님의 말씀.
+
+	Other Operations
+
+		Duplicate elimination(중복제거)
+			중복제거연산은 중복을 찾아내기 위해 hashing 또는 sorting을 이용함.
+			sorting의 결과 같은 값들은 연속해서 나타나므로 이 것들을 제거.
+
+			hashing을 이용하면 중복된 값들은 같은 파티션에 오므로 쉽게 제거 가능.
+			
+		projection 연산에서 중복 제거가 필요한 경우 위의 방법으로 제거함.
+
+		Aggregation(집계함수, 통계함수)
+			마찬가지로 중복제거와 비슷하게 수행됨.
+		
+		집합 연산
+			sorting 후에 merge join과 유사한 방법을 쓰거나
+			hash join과 유사한 방법을 쓰면 된다고 함.
+			hashing을 이용한 집합 연산은 동일한 파티션에 존재하는 값들만 
+			고려하면 됨
+
+			합집합에서는 대응되는 파티션 내에서 중복되는 값들만 제거하고
+			모두 출력하면 된다.
+
+			교집합에서는 대응되는 파티셔누 내에서 중복되는 값들만 출력하면 된다.
+			
