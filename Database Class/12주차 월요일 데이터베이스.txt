@@ -159,3 +159,14 @@ Transaction :
 	트랜잭션의 시작과 끝을 명시를 해줘야 한다.
 
 		끝은 앞에서도 말헀지만 Commit 또는 Rollback이다.
+
+
+
+	read-committed isolation level이 뭘까
+		과제에 자주 등장했지만 필기는 되어있지 않다.
+		
+
+		read-uncommitted : 각 트랜잭션의 변경내용이 commit이나 rollback의 여부에 상관없이 다른 트랜잭션에서
+			사용할 수 있는 격리수준.
+
+		read-committed : commit이나 rollback이 일어나야 다른 트랜잭션에서 데이터를 사용할 수 있다.
