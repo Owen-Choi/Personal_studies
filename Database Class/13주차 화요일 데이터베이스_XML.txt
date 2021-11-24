@@ -1,0 +1,54 @@
+데이터베이스 시험 12/6 월요일 오후 8시-10시
+
+XML 스키마
+
+	DTD보다 발전된 형태가 XML 스키마
+	XSD : XML Schema Definition
+
+		목적은 DTD와 같다.
+		DTD보다 더 richer하고 powerful하다. 더 많은 것을 다양하고 상세하게 정의할 수 있다.
+		XML 스키마 자체가 XML로 만들어졌다는 특성이 있다.
+		DTD의 경우 DTD 자체는 XML이 아니었다.
+
+
+	구성
+
+		XML namespace : 
+
+			IRI라고 하는 것은 URL과 비슷한 것. 주소를 따라 가면 필요한 거들이 모여있다.
+			XML의 vocabulary라고도 불린다.
+		xs= "~~~" 이 부분이 namespace이다. 꼭 xs가 아니어도 된다.
+
+		XML에서 쓰는 모든 element는 반드시 namespace를 지정해줘야 한다.
+
+		<xs:element name="xxx" type="yyy"/> 와 같은 형식으로 포맷 지정해줄 수 있다.
+		<xs:restriction base="xs:string">과 같은 형식으로 제약사항을 나타낼 수 있다. 
+		<xs:pattern value="[a-z]"/> 여기서 [a-z]는 a부터 z중 "한글자"를 의미하는 것이다.
+
+		<xs:pattern value="([a-z][A-Z])*/"> : [a-z][A-Z] 이렇게 글자 2개가 0개 이상(*)이니까
+		짝수개만 가능하다. (9개 안됨)
+
+		<xs:pattern value="male|female"/> : |는 둘 중 하나만 가능하다는 것.
+		<xs:pattern value="[a-zA-Zo-9]{8}/"> : 중괄호는 글자의 수를 의미. 즉 8글자가 있다는 것.
+
+		이 외에도 restrictions들이 많이 있다.
+		enumertaion fractiondigits, .... 
+
+		use="required" : 반드시 지정해야 된다는 제약조건. not null과 비슷한 의미인가?
+
+		Empty element : 
+			element의 값이 없는 것.
+
+		attribute가 없으면 simple type. attribute가 있으면 complex type
+		만약 어떤 element안에 다른 값들은 없고 element만 있다면 mixed="true" 를 추가할 필요가 없지만
+		한 element안에 다른 element와 값들이 섞여있다면 mixed="true"를 추가해준다.
+
+		sequence 대신 all을 쓴다면 순서가 바뀌어도 되지만 하위 element들이 한번씩만 나타나야 한다.
+		
+		56p.
+
+		shiporder 가 정의된 XML 스키마가 있어야 한다.
+		그게 바로 shiporder.xsd, 이 스키마가 인터넷에 저장된 것이 아니라 로컬에 저장되어 있다면
+		그런 경우에는 XML 스키마의 네임스페이스를 지정하지 않는다.
+		이때는 xsi:noNamespaceShemaLocation="shiporder.xsd" 로 쓴다.
+		
