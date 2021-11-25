@@ -52,3 +52,141 @@ XML 스키마
 		그런 경우에는 XML 스키마의 네임스페이스를 지정하지 않는다.
 		이때는 xsi:noNamespaceShemaLocation="shiporder.xsd" 로 쓴다.
 		
+//////////////////////////////////////////////////////////////////////////////////////////////
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+
+    targetNamespace="http://codingsam.com"
+
+    xmlns="http://codingsam.com"
+
+    elementFormDefault="qualified">
+
+<xs:element name="food">
+     <xs:complexType>
+          <xs:sequence>
+	<xs:element name="name" type="xs:string"/>
+	<xs:element name="type" type="xs:string"/>
+	<xs:element name="cost" type="xs:string"/>
+          </xs:sequence>
+     </xs:complexType>
+</xs:element>
+
+</xs:schema>
+
+
+
+xmlns : xs 속성은 XSD의 요소와 타입에 사용할 W3C의 XML 스키마 네임스페이스를 명시한다.
+	ㄴ 무조건 W3C를 향해야 하나...?
+targetNameSpace 속성은 요소를 정의할 XML 스키마 네임스페이스를 명시한다.
+
+complexType : 
+	복합 타입에는 빈 요소, 자식 요소만을 포함하는 요소, 텍스트만을 포함하는 요소, 자식 요소와 텍스트를 모두 포함하는 요소
+	4가지로 이루어져있다.
+
+	빈 요소는 자식 요소를 가지지 않고 오직 속성만을 가지는 요소이다.
+
+1. 빈요소
+	
+<xs:element name="red">
+    <xs:complexType>
+                <xs:attribute name="redValue" type="xs:positiveInteger"/>
+    </xs:complexType>
+</xs:element>
+
+2. 자식 요소만을 포함하는 요소
+
+<xs:element name="physical">
+
+    <xs:complexType>
+
+        <xs:sequence>
+
+            <xs:element name="height" type="xs:integer"/>
+
+            <xs:element name="waist" type="xs:integer"/>
+
+        </xs:sequence>
+
+    </xs:complexType>
+
+</xs:element>
+
+자식 요소를 가지기 때문에 순서 지시자가 들어갈 수 있다.
+
+3. 텍스트만을 포함하는 요소
+4. 자식 요소와 텍스트를 모두 포함하는 요소
+<xs:element name="student">
+
+    <xs:complexType mixed="true">
+
+        <xs:sequence>
+
+            <xs:element name="name" type="xs:string"/>
+
+            <xs:element name="gender" type="xs:string"/>
+
+            <xs:element name="age" type="xs:positiveInteger"/>
+
+        </xs:sequence>
+
+    </xs:complexType>
+
+</xs:element>
+
+위 스키마를 따르는 XML은 다음과 같다.
+<student>
+
+    학생의 이름은 <name>홍길동</name>이고,
+
+    성별은 <gender>남자</gender>이며,
+
+    나이는 <age>15</age>살 입니다.
+
+</student>
+
+이렇게 텍스트를 같이 가질려면 <xs:complexType mixed="true"> 를 명시해줘야 한다.
+
+출현 빈도 지시자 : 
+	maxOccurs
+	minOccurs
+	<xs:element name="phoneNumber" type="xs:integer" maxOccurs="2"/>
+	와 같이 스키마(xsd) 내부의 element의 선언부에 붙여서 사용한다.
+
+이 출현빈도는 기본값이 둘 다 1이기 때문에 따로 설정해주지 않으면 모든 요소를 한번씩 밖에 설정하지 못한다.
+이 제한을 해제하고 싶다면 <xs:element name="PhoneNumber" type="xs:integer" maxOccurs="unbounded/">
+와 같이 unbounded를 추가해주면 된다.
+
+sequence 자리에는 순서 지시자가 위치한다.
+<xs:sequence>는 순서 지시자의 일종으로 밖의 element는 이 순서 지시자 아래에 있는 element의 순서를 지켜야 함을
+나타내는 제약조건이다.
+
+<xs:all>은 순서 지시자의 일종으로 안에 있는 element들의 순서는 상관 없지만 반드시 한번씩만 나와야 한다.
+	그렇기 때문에 all지시자가 나오면 출현 빈도 지시자인 minOccurs는 0또는 1의 값을,
+	maxOccurs는 1로만 명시할 수 있다.
+
+<xs:choice>는 순서 지시자의 일종으로 안에 있는 element들 중 단 하나만을 자식 요소로 가질 수 있다.
+
+<xs:element name="student">
+
+    <xs:complexType>
+
+        <xs:sequence>
+
+            <xs:element name="name" type="xs:string"/>
+
+            <xs:element name="gender" type="xs:string"/>
+
+            <xs:any minOccurs="0"/>
+
+        </xs:sequence>
+
+    </xs:complexType>
+
+</xs:element>
+
+위와 같은 XML코드에서 any minOccurs="0" 으로 인해 3번째에는 아무 요소나 와도 상관없다.
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////
