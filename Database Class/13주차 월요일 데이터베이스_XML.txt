@@ -51,7 +51,7 @@ XML :
 			<!ELEMENT type (#PCDATA)>
 			<!ELEMENT> cost (#PCDATA)>
 		]>
-	여기까지가 DTD이다. 아래 코드?는 xml이고, 이 두개가 한 파일에 있다면 이는 내부 서브셋이다.
+	여기까지가 DTD이다. 아래 코드는 xml이고, 이 두개가 한 파일에 있다면 이는 내부 서브셋이다.
 	외부에서 DTD가 선언될 경우 다음과 같이 경로를 명시해야 한다.
 	<!DOCTYPE food SYSTEM "food.dtd">
 	
