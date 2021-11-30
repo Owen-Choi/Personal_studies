@@ -11,7 +11,7 @@ indexing과 hashing
 		인덱스 파일은 search key || pointer 의 형태로 이루어진다. 
 		포인터는 search key에 해당하는 tuple을 가리킨다. 
 
-	인덱슨느 2종류로 나뉜다
+	인덱스는 2종류로 나뉜다
 		ordered indices
 		hash indices
 
