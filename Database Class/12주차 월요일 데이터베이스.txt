@@ -72,7 +72,7 @@ Transaction :
 			어떤 스케쥴도 아니다.
 			데이터베이스의 Consistency를 보장할 수 없다.
 			근데 왜 Serializable이 아니지? 
-
+				ㄴ Serial Schedule과 결과가 같지 않기 때문이다.
 
 	Serializability : 
 		두가지로 나뉜다. Conflict 와 view. 이 강의에서는 Conflict만 보겠다.
@@ -124,7 +124,7 @@ Transaction :
 
 		Cascadeless scheduels : 
 			연쇄취소가 없는 스케쥴을 일컫는다.
-			
+			Transaction들 간에 데이터를 읽을려면 반드시 Commit이나 Rollback이 선행되어야 함.
 
 		Transaction isolation : 
 			Concurrency control :
@@ -148,10 +148,10 @@ Transaction :
 		Phantom read :
 			다른 트랜잭션의 결과로 만들어진 데이터로 인해 
 			없던 값이 나타나는 것. 좋지 않은 현상이다.
-				
+			28페이지의 왼쪽 테이블이 이에 해당한다.	
 		Non-repeatable read
 			다른 트랜잭션의 결과로 인해 원래 있던 값이 바뀌는 것.
-
+			28페이지의 오른쪽 테이블이 이에 해당한다.
 		Repeatable read : 
 			phantom read까지는 허용하는 Consistency level.
 			가장 보편적이다.	

@@ -38,6 +38,8 @@
 				검색키가 primary key가 아닌 경우에 대한 알고리즘이다.
 				학과 = '소프트웨어학과'와 같은 경우.
 				{hi * (tt + ts)}(B+트리의 access cost) + ts + tt * b
+				여기서 b는 일치하는 record를 담고 있는 블록의 수이다.
+				즉 b에서 원하는 결과가 있는 지 다시 찾아야 하는 듯.
 			
 			A4(secondary index, equality on non-key)
 				검색키가 primary키가 아니지만 candidate key인 경우.
@@ -49,12 +51,14 @@
 		
 		대소 비교에 대한 알고리즘
 			A5(primary index, comparison)
+				primary index이기 때문에 순서대로 저장되어있다.
 				A>=V인 경우 인덱스를 이용해서 A>=V인 첫 값을 찾고
 				그 다음부터 순서대로 scan하면 된다.
 				A<=V인 경우 인덱스를 사용하지 않고 A>V인 튜플이 나올 때
 				까지 scan한다.
 
 			A6(secondary index, comparison)
+				secondary index이기 때문에 순서가 없다.
 				A5 알고리즘에서 entry와 pointer의 개념이 추가됨.
 		
 	여러개의 조건에 대한 selection 연산
@@ -124,10 +128,11 @@ Join Operation
 		nr은 테이블r의 tuple개수, br은 테이블 r의 블록개수.
 		만약 두 테이블 중 작은 쪽이 모두 메모리에 올라간다면 그 테이블을 inner relation으로
 		해야한다. 이 경우 비용은 br + bs 의 block transfer와 2번의 seek만 필요하다. 
-		
+		메모리에 올라가지 않고 한번에 하나의 블록씩만 메모리에 올릴 수 있는 최악의 경우에는,
 		테이블 r(outer)의 첫번째 tuple에 대하여 테이블 s(inner) 전체를 읽고,
 		두번째 tuple에 대하여 s 전체를 읽고.....
-		테이블 s를 총 nr번(r의 튜플 개수)읽어야 한다.
+		테이블 s를 총 nr번(r의 튜플 개수)읽어야 한다. = nr * bs + br 번의 블록 이동
+						 + nr + br 번의 seek
 
 		요점은 큰 테이블을 outer relation으로 두는 것이 유리함.
 		
@@ -136,10 +141,12 @@ Join Operation
 		nested loop join은 outer relation r의 각 tuple에 대하여 inner relation s를 
 		한번씩 access 하는데에 반하여 block nested loop join은 테이블 r의 각 블록에
 		대하여 테이블 s를 한번씩 access하여 전체 블록 전송의 횟수를 크게 줄인 것이다.
-		
+		즉 튜플에 대하여 읽던 것을 블록에 대하여 읽는 것으로 바꿈으로서 성능을 높임
 		r의 첫번째 블럭에 대하여 s전체를 읽고, 두번째 블럭에 대하여 전체를 읽고....
-		s를 br번 access하면 된다. 		
+		s를 br(블럭의 개수)번 access하면 된다. 		
 		기타 성능 향상법은 ppt 참고.
+		최악의 경우 br * bs + br의 블록 이동과 2*br번의 seek가 필요하다.
+		최고의 경우는 br + bs의 블록 이동과 2번의 seek가 필요하다.
 
 	Indexed nested loop join
 	
@@ -155,11 +162,13 @@ Join Operation
 		br값을 줄일 수 있기 때문. 
 
 	Merge join
-	
+		
+		마찬가지로 equi join이나 natural join에 한해서만 사용할 수 있다.
 		두 테이블이 모두 join attribute에 대하여 sorting이 되어있어야 하며
 		그렇지 않을 경우 먼저 sorting을 해야한다. 
 		ppt 참고, a1을 기준으로 join한다면 a1은 sort 되어있어야 한다. 
-		
+		비용은 br+bs번의 블록 이동과 br/bb + bs/bb번의 seek가 필요하다.
+		여기서 bb는 버퍼 블록의 개수이다.
 
 	Hash join
 	

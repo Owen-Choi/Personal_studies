@@ -25,7 +25,7 @@ XML 스키마
 		<xs:restriction base="xs:string">과 같은 형식으로 제약사항을 나타낼 수 있다. 
 		<xs:pattern value="[a-z]"/> 여기서 [a-z]는 a부터 z중 "한글자"를 의미하는 것이다.
 
-		<xs:pattern value="([a-z][A-Z])*/"> : [a-z][A-Z] 이렇게 글자 2개가 0개 이상(*)이니까
+		<xs:pattern value="([a-z][A-Z])*"/> : [a-z][A-Z] 이렇게 글자 2개가 0개 이상(*)이니까
 		짝수개만 가능하다. (9개 안됨)
 
 		<xs:pattern value="male|female"/> : |는 둘 중 하나만 가능하다는 것.
@@ -51,7 +51,7 @@ XML 스키마
 		그게 바로 shiporder.xsd, 이 스키마가 인터넷에 저장된 것이 아니라 로컬에 저장되어 있다면
 		그런 경우에는 XML 스키마의 네임스페이스를 지정하지 않는다.
 		이때는 xsi:noNamespaceShemaLocation="shiporder.xsd" 로 쓴다.
-		
+			ㄴ 그리고 이런 경우 xsd 파일에도 네임스페이스(targetNamespace, xmlns)를 지정해주지 않는 것 같다.
 //////////////////////////////////////////////////////////////////////////////////////////////
 <?xml version="1.0" encoding="UTF-8" ?>
 
@@ -87,7 +87,7 @@ complexType :
 
 	빈 요소는 자식 요소를 가지지 않고 오직 속성만을 가지는 요소이다.
 
-1. 빈요소
+1. 빈요소 (element는 없고 attribute만 존재하는 유형)
 	
 <xs:element name="red">
     <xs:complexType>
@@ -116,6 +116,7 @@ complexType :
 자식 요소를 가지기 때문에 순서 지시자가 들어갈 수 있다.
 
 3. 텍스트만을 포함하는 요소
+
 4. 자식 요소와 텍스트를 모두 포함하는 요소
 <xs:element name="student">
 
