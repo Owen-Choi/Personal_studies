@@ -12,7 +12,7 @@ inter와 같이 외부적으로 결정되어야 하는 패킷은 AS들 사이의
 	인트라 AS 라우팅 프로토콜에는 LS, DV 기반으로 만들어진 프르토콜들을 쓸 수 있고 대표적으로 많이
 	사용하는 프로토콜이 link state기반으로 된 OSPF, RIP 등이 있다.
 
-	instra-AS routing은, 즉 내부에서 목적지를 찾는 라우팅의 목표는 최소의 cost로 목적기까지 가는
+	intra-AS routing은, 즉 내부에서 목적지를 찾는 라우팅의 목표는 최소의 cost로 목적기까지 가는
 	shortest path를 찾는 것이다. 
 
 	그리고 외부의 목적지로 이동하기 위해 필요한 외부의 정보는
@@ -22,11 +22,11 @@ inter와 같이 외부적으로 결정되어야 하는 패킷은 AS들 사이의
 	지금까지 우리가 공부한 LS, DV는 intra-AS Routing 프로토콜이었다.
 	내부적으로는 길찾기를 최소의 비용으로 하는 것이 마땅하다.
 	현재 사용되고 있는 가장 유명한 intra AS 알고리즘들은 알고있어야 한다.
-	OSRF : 다익스트라와 LS 기반의 OSPF : Open Shortest-path First
+	OSPF : 다익스트라와 LS 기반의 OSPF : Open Shortest-path First
 		ㄴ 다익스트라 알고리즘을 쓴 link-state algorithm이다는 것을 꼭 기억하라고 함
 	RIP : Routing information protocol
 	EGRP : 풀네임 ppt 참고, 시스코에서 만듦
-		RIP와 EGRP는 DV 기반의 알고리즘. 시험 각이다.
+		RIP와 EGRP는 DV 기반의 알고리즘. OSRF와의 차이점 알고있어야 할 것 같다.
 
 	OSPF : 처음에 정보를 얻기 위해 전체 AS내에서 라우터들에게 flood(broadcast)하고 topology 정보들이
 	모이면 그때 다익스트라 알고리즘을 돌려서 경로를 최단으로 찾는다.
@@ -126,8 +126,8 @@ ICMP
 	패킷의 헤더쪽에 붙어서 이동한다.
 	ICMP는 에러의 종류를 보고하거나 네트워크 상태를 측정하는데 사용된다. 
 		네트워크 상태의 측정은 echo를 이용하면 가능한데, 이 ICMP가 echo에서 사용된다.
-	ping도 이 echo 중 하나이다. I
-		CMP echo request packet을 보내면 상대측에서 ICMP echo reply를 보낸다.
+	ping도 이 echo 중 하나이다. 
+		ICMP echo request packet을 보내면 상대측에서 ICMP echo reply를 보낸다.
 	
 	TTL : Time to live (남아있는 수명)
 	라우터들이 포워딩을 할 때 마다 TTL 값을 하나씩 빼버린다. 
@@ -143,3 +143,23 @@ ICMP
 
 	ICMP는 보안에 악용될 수 있다. 핑으로 목적지에 접근할 수 있는지 확인함.
 	따라서 방화벽은 ICMP의 echo request packet을 off 시킨다.
+
+
+
+=========================================================================
+
+하단 문제 
+
+	a.
+		A는 x(customer network)에게 무엇을 advertise 할까?
+		==> A는 x에게 w,y에게 갈 수 있다고 알려준다. 그리고 B와C가 폐쇄적인 네트워크가 아니라면
+		B,C와도 연결되어 있다고 알려준다.
+
+	b.
+		X는 customer network이기 때문에 어떠한 정보도 A에게 주지 않는다. 왜냐하면 정보를 제공할 경우
+		자신을 거쳐서 가는 것을 허용하게 되고, 이는 customer에게 아무런 이득도 되지 않으면서 데이터 요금
+		만 늘어나는 것이기 때문에 현대 네트워크 체계에서는 금기시한다.
+	
+	c.
+		A는 C에게 w, x와 연결되어 있다고만 말해준다. 여기서 y에 대한 정보는 제공하지 않는데, 이는
+		C가 자신을 통해 y로 가는 것을 허용하는 행위이기 때문이다.
