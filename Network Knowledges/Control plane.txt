@@ -1,0 +1,53 @@
+과연 Forwarding table은 누가 만드는 것일까?
+-라우팅 알고리즘이 만든다.
+
+컨트롤을 각각의 라우터들별로 하는 방식(per-router control)
+	다른 라우터들과 소통하면서 데이터를 수집한다.
+라우터들이 소속된 ISP가 라우터를 중앙 통제 하는 방식(logically cenralized control)
+
+	per-router에서 제어를 하는 윗부분이 control plane. ppt를 보면 라우터 상호간에 복잡하게 얽혀있다.
+	centralized에서 제어를 하는 control plane은 ISP로부터 받아오는 구조이다. 
+
+	만약 중국에서 오는 DDOS 공격을 막기 위해서는 ISP가 중국->한국으로 오는 라우팅 테이블을 드랍해버리면 된다.
+	
+
+라우팅 프로토콜(알고리즘) : 
+
+	라우팅 알고리즘의 목적 : 
+		source  router -> destination router으로 가는 좋은 path를 찾아주는 것.
+			여기서 "좋은"이란 우리가 정의하기에 따라 다르다. -> 적은 가격, 빠른 시간, 적은 혼잡도...
+		주의 : 라우팅 알고리즘이 end(host) to end로 가는 길을 찾아주는 것이 아니다.
+
+		Global information 과 local(decentralized)information
+			Global은 전체적인 네트워크의 정보를 보여준다.	- link state가 이 정보를 이용해서 동작한다.
+			local은 부분적인 네트워크의 정보를 보여준다.	-distance vector가 이 정보를 이용해서 동작한다.
+	
+		link state
+		distance vector
+		요 2개 시험 무적권 나옴
+		
+
+	link state 알고리즘 : 
+
+		이웃 라우터는 자신과 직접적으로 연결된 라우터를 일컫는다.
+		각각의 라우터가 모든 라우터에게 "나 여기있어요"하고 broadcast 한다. 그러면 그것을 받은 라우터는 또 다른 라우터에게
+		전파하고 ~~ 한다. 시간이 지나면 모든 라우터들이 네트워크 정보를 알게 될 것이다.(ppt 참고)
+		각각의 라우터들이 broadcast를 통해 똑같은 global information을 갖게 된다.
+		이런 특성으로 인해 link state는 알고리즘을 돌리기 위한 사전 cost가 좀 큰 편이다.
+		
+			메인 알고리즘은 다익스트라. 관련 내용은 ppt 참고.
+
+	distance vector 알고리즘 : 
+		
+		u -> x -> y 인 상황에서 x가 u에게 "나 y로 갈려면 1 필요해" 라고 말한다. 
+		그럼 u가 그 정보를 받고 y로 가는 길의 cost를 계산한다.
+			메인 알고리즘은 Bellman-Ford equation에 기초한다.	
+			Dx(y) = minv {Cx,v + Dv(y)}
+				x입장에서, x와 연결된 v들이 있고, 이 v들은 y로 가는 데 걸리는 비용을 x에게 건네준다.
+				이 값들을 보면 모두 x입장에서 그때 그때 사용할 수 있는 local information이다.
+			주기적으로 돌아가면서 distance vector를 교환하고 업데이트하고.... 
+	LS와 DS 비교
+
+		LS는 답이 원샷으로 뿅 나온다. 
+		DS는 시간이 지나면서 답이 점점점점 나오는 것이다.
+		

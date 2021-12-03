@@ -1,0 +1,18 @@
+TCP flow control
+
+	첫장의 그림은 TCP가 순서에 맞춰서 데이터그램을 갖다놓으면 어플리케이션이
+	그 데이터를 하나씩 읽는다(removing).
+	만약 sender가 보내는 데이터가 어플리케이션이 읽는 데이터에 비해 너무 많다면
+	TCP receiver buffer가 계속해서 채워지고, overflow가 발생할 수 있다. 
+	flow control이라는 것은 receiver가 읽어드리는 비율에 맞게 sender가 너무 많이 보내지 않게
+	제어를 해주는 기법이다. 
+	receiver가 sender에게 요청을 보낸다고 한다. "너무 많이 보내지 마"
+
+	receiver는 남아있는 버퍼의 크기를 알고있다. 수신자는 free buffer space의 크기만큼만
+	데이터 양을 감당할 수 있다. 
+	수신자는 ACK을 보낼 때 마다 이 사이즈가 업데이트가 된다고 한다.
+
+
+	free buffer size만큼만 data를 받을 수 있다. 300kB가 현재 buffered data라면 700kB 만큼만 받을 수 있다.
+	그리고 이런 정보는 TCP 헤더 부분의 receive window에 저장돼서 ACK을 보낼 때 같이 보낸다. (advertise)
+	sender는 이 정보를  pipelining 에서 n을 결정할 때 참고한다.

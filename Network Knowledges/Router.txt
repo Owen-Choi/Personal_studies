@@ -1,0 +1,137 @@
+라우터는 하나의 컴퓨팅 장치라고 생각해도 됨, 
+라우터에는 포트들이 있는데 , 각각의 포트들에 연결된 링크로부터 패킷들이( IP 헤더들을 담고있는 패킷들) 들어오고 나가고 하는 것이다. 
+각각의 포트들은 하나의 네트워크 인터페이스 카드(Network Interface Card, NIC)이고 NIC는 기본적으로 어떤 물리적인 링크들과 연결돼서
+그 물리적인 신호들을 전기적인 신호, 비트나 이런것 등으로 바꾸고 그것들이 링크 레이어로 올라오면 네트워크 레이어에서 그것들을 처리하는 것.
+Input port로 들어온 신호가 다른 방향의 Output port로 나갈 수도 있기 때문에 중간에 switching 해주는 기판? 이 필요하다고 한다. 
+그리고 이 switching 속도는 매우 빠르게 일어나야 되고 이 부분은 그렇기 때문에 매우 고가의 하드웨어로 구성된다고 한다.
+그리고 각각의 라우터는 포워딩 테이블(forwarding table)을 가지고 있다.
+
+스위칭은 어디로 갈 지 가 정해진 뒤에 일어나는데, 이 "어디로 갈 지"를 정해주는 것이 routing algorithm이다.
+라우터에서 라우팅은 control  plane에서 한다.(control하는 평면위에서 요소들이 제어 관련된 행동을 하는거)
+그 control에 의해서 뭔가 의사결정이 되면 그 의사결정을 forwarding table로 데이터 화 시켜서 processing을 해주는 것.
+
+Router architecture overview 사진 별표치셨다. 그림 이해하고 넘어가자.
+
+
+
+Input port 
+
+	inputport는 초록색 부분(line termination)에서  광케이블, 랜 등의 물리적인 신호를 전기적인 신호로 바꿔 link layer(파란색 부분)에서 처리를 하고 
+	그 처리된 내용을 제거를 시킨 다음 IP정보를 담은 네트워크 레이어 정보가 올라온다. 그 후에 빨간색 부분에서 에러가 없는 지 확인을 하고 에러가 없다면
+	 forwarding을 통해 몇번 Output port로 switching을 해야하는지 결정한다. 
+	 	decentralized switching : 중앙집중되지 않은, 분산적으로(Input port별로 forwarding을 분산적으로 수행함) 이루어짐.
+		line speed : 빨간색 부분에서 목적지를 찾아 Switching 시키는 속도가 느려서는 안되고 매우매우 빨라야 한다.
+		queueing : 만약 나가는 양보다 들어오는 양이 더 많다면 queueing이 일어날 수 있다. 이런 경우는 Input port쪽에서 일어나는 queueing이다.
+
+	Forwarding은 당연히 destination address 정보를 기반으로 이루어진다. 
+	라우터는 어느 목적지로 가더라도(32비트 IP 주소중에 어떤 수가 들어오더라도) 어떤 port로 나가야 할지를 알려줘야 하는 의무가 있다.
+	==> all possible destination address should be forwarded
+		저번 시간에 forward table의 크기가 너무 커지는 것을 어떻게 막는지에 대해 배웠다.  subnet prefix로 범위를 정하는게 그 내용이다.
+		
+
+	그렇다면 실질적으로 range라고 하는 것을 어떻게 forwarding table에서 관리할까?
+		Destination-based forwarding 페이지의 표 참고, 위에 있는 이진 IP 주소와 아래의 이진 IP주소 사이에 있는 주소라면 
+		옆의 Link interface로 나가라! 이런 의미.
+		이런 시스템에선 걸러야 하는 목적지가 많아지면 테이블이 많이 복잡해진다. 
+		
+	실제 구현 방면에서 어떻게 range를 표시할까? 
+		wild card(*) 
+			11001000 00010111 00001*** ********
+		이 와일드카드를 통해 위에서 말했었던 forwarding table에서 조건문을 축약할 수 있다. 
+		
+
+	문제  : 10진수IP주소를 주고, 2진수로 이루어진 forwarding table을 주면서 이 IP주소는 어느 link interface로 가야하는지를 묻는
+		prefix matching 문제.
+	이 부분은 ppt에 필기를 일정 해놨으니 자료 참고하자.
+	여기서 제일 마지막 DA는 link interface 1과 2를 모두 만족하게 된다.
+	※ 이런 경우는 wild card를 조금 덜 사용해서 prefix를 더 구체적으로 명시해놓은,  다시 말해서 forwarding table과 겹치는 부분이 가장 긴 
+		link interface 1에 매칭을 시켜주면 된다.
+		★이것을 Longest prefix matching이라고 한다. 더 디테일한 것까지 일치하는 것을 고르는 것.
+	나머지는 ppt 자료 참고
+	
+	
+
+	그러면 이렇게 forwarding table에서 위와 같은 규칙(Logest prefix match)을 가지고 output port를 찾아주는 것이 어떤 장점이 있을지에 대해 알아보자.
+	만약 어떤 ISP 회사가 200.23.16.0/20 이라는 IP 주소 블럭을 가지고 있다면, 이 회사는 2^12 = 4096개의 IP주소를 가질 수 있게 된다.
+	이 4096개의 아이피주소를 8개의 기관에 돈을 받고 할당을 시켜준다. 
+	그러면 2^12 개의 주소를 2^3으로 나누면 2^(12 - 3) = 2^9이 되고 즉 8개의 기관들은 2^9개의 IP주소를 받게 된다.
+	그렇게 되면 기관별로 사용할 수 있는 호스트 주소의 자리가 2^3만큼 줄게 된다. 당연한 것이 8로 나눴기 떄문.
+	즉 ISP의 주소가 200.23.16.0/20이었다면 기관들은 200.23.16.0/23 이런 형태를 띄게 된다.
+		(이 부분은 꼭 ppt봐라.) 
+
+address aggregation : 
+	
+	Hierarchical addressing
+	
+	ISP 라우터?는 8개 기관의 IP주소를 모두 개별적으로 받아서 처리하는 것이 아니라
+	"~~~ prefix로 시작하는 IP주소는 다 나한테 주세요" 하고 홍보(advertise)한다.
+	advertise라는 것은 라우팅에 필요한 어떤 정보를 라우터들에게 쫙 뿌리는 메시지라고 한다.
+	이 정보를 받은 라우터들은 그것을 라우팅 테이블에 반영을 한다.
+
+	이렇게 만들어진 테이블에 기초해서 목적지가 정해진다 .만약 200.23.18.15라는 주소가 있으면 이 주소의 이동 경로를 살펴보자
+	처음 인터넷에서 테이블에 200.23.16.0/20 은 1로 가라는 정보를 보고 1로 가게 된다. (이 정보는 ISP가 advertise한 거 같음)
+	이 정보를 따라 1로 가게되면 ISP의 라우터가 있고 여기서 또 ISP의 Forwarding table에서 추가적으로 결정을 해서 목적지를
+	보내준다. 
+
+	routing advertisment 라는 개념 알아두자.
+	이 메시지의 의미는 다음과 같다.
+	"Send me anything with addresses beginning ~~~"
+	
+	즉 위의 예제에서 ISP의 라우터는 인터넷?에게 "Send me anything with addresses beginning 200.23.16.0/20"
+	이라는 메시지를 보낸 것이다.
+
+	여기서 만약 ISP의 라우터가 늘어나면 어떻게 될까? 그리고 기존의 organization의 링크를 옮기면 어떻게 될까?
+	간단하다! Longest prefix matching에 의해서 더 길고 구체적인 링크가 선정되기 때문에 만약 문제가 생기는 
+	주소가 생긴다면 그 주소의 정보만 인터넷의 테이블에 advertise하면 된다.  
+	==> Longest prefix matching의 활용, 현재 인터넷은 이 체계를 쓰고있다.
+
+	==> 이게 장점. 라우팅 테이블과 라우팅 테이블의 업데이트가 간단하고 효율적으로 처리가 될 수 있다.
+
+	switching fabric : 기차길처럼 switch해주는 기판이 필요하다
+		속도가 매우 빨라야 한다.
+		3가지 종류가 있다.
+			memory
+			bus
+			crossbar
+			(그림 참고)
+		memory(참고만) : 참조 형태로 알아두기 바람. 옛날 방식.
+			메모리에 들어온 패킷을 저장해놓고 output쪽에서 메모리의 패킷을 읽어서 transmisstion하는 것.
+			==> 메모리에 쓰고 읽는 시간때문에 속도가 느리다.
+		
+		bus(참고만) : 데이터가 다니는 길? 인 버스를 통해 input -> output으로 line speed로 슉 나갈 수 있음.
+			==> 버스라고 하는 것은 버스에 연결된 소스들이 공유를 하는 상태. 즉 1번이 2번으로 갈려면
+				1번과 2번만 열어두고 나머지는 닫아놔야 한다. 하지만 이렇게 하면 병렬적 처리가
+				효율적이지 못하다. 한 순간에 하나의 연결만 가능하기 때문.
+		crossbar(참고만) : 버스를 여러개 두는 것.
+
+	라우터의 딜레이 : 큐잉 딜레이에서 잠깐 봤는데 더 살펴보자.
+		Input port의 queueing : 
+			만약 1번으로 갈려는 패킷?이 2개가 있다면, 이 2개를 한번에 보내는 것이 아니라
+			한번에 하나씩 간다. 그럼 나머지 하나는 기다리게 되면서 buffering이 생기게 된다. 
+			즉 queue에 패킷이 쌓이게 된다. 
+			하지만 loss까지 이어질 정도로 심하진 않다. 
+			그리고 ppt에서 3번째 input port에 빨간색(1번으로 가는)이 아닌 초록색을 먼저 보내면
+			되지만 빨간색이 대기중이라 안된다. ==> head of 어쩌고. ppt에서 찾자.
+						==> head of the line
+
+
+		Output port queueing 
+			지금까지 라우터의 queueing을 말할 때 output에 초점을 두고 얘기한거임, 
+			아웃풋이 더 심각하기 때문.
+			longest prefix matching, fabric 등의 과정을 지나서 output port까지 
+			패킷이 전달이 된다. 
+			초록색 NIC에서 초당 R비트로 transmission 하는 딜레이가 발생. 
+			버퍼가 꽉 차지 않더라도 미리미리 드랍을 하던가, 아니면 buffer의 사이즈를 1로 두는 신기한 경우도 있다.
+			이런 여러가지 아이디어를 바탕으로 라우터를 설계할 수 있다.
+			또 buffer에서 다음 차례로 누구를 선택할 것인가와 관련된 스케쥴링 이슈도 있을 수 있다.
+	buffer management  : 
+		taildrop : 버퍼가 차면 그 뒤에 오는 패킷들 drop
+		priority : 우선순위에 기반해서 drop
+		random : 버퍼가 일정 길이를 넘어가면 (꽉 차지 않아도) 확률 기반으로 드랍하거나 받아들임
+		
+		실질적으로는 1번이 가장 많이 쓰인다.
+		트래픽양이 워낙 방대하기 때문에 스마트한 알고리즘을 적용해서 버퍼를 관리할 수도 있지만
+		실제로는 성능차이가 크지 않기 때문에 구현이 간단한 tail drop을 가장 많이 쓴다.
+
+		우선순위 관련 스케쥴링은 중간고사에 나오지 않는다. 참고만 하자.
+		 

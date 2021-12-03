@@ -1,0 +1,127 @@
+자료형을 변환하는 형 변환 함수
+
+	SELECT EMPNO, ENAME, EMPNO + '500'
+		FROM EMP
+	WHERE ENAME = 'SCOTT';
+
+	위 쿼리문의 출력 결과로, EMPNO에 500이 더해진 값을 나타내는 열이 추가된다.
+	위와 같이 숫자처럼 생긴 문자열은 '자동 형 변환' 이라고도 불리는 암시적 형 변환이 발생하여 자료형을
+	숫자로 변환해주어 더한 결과를 출력한다.
+	하지만 아래의 경우에는 성립하지 않는다.
+
+	SELECT 'ABCD' + EMPNO, EMPNO
+		FROM EMP
+	WHERE ENAME = 'SCOTT';
+
+	숫자처럼 생긴 문자열은 형을 바꿔주지만, 그 외의 경우는 잘 동작하길 기대하기 어렵다고 한다.
+	이런 경우에는 명시적 형 변환을 해주어야 한다.
+	
+	명시적 형 변환
+	
+		형 변환 함수를 사용하여 자료형을 변환해 주는 방식이라고 한다.
+		종류는 다음과 같다.
+
+		TO_CHAR : 숫자 또는 날짜 데이터를 문자 데이터로 변환
+		TO_NUMBER : 문자 데이터를 숫자 데이터로 변환
+		TO_DATE : 문자 데이터를 날짜 데이터로 변환
+
+		TO_CHAR([날짜데이터(필수)], '[출력되길 원하는 문자 형태(필수)]')
+		
+		만약 현재 날짜와 시간을 연/월/일 시:분:초 형태로 출력하길 원하면 다음과 같이 함수를 사용할 수 있다.
+		
+		SELECT TO_CHAR(SYSDATE, 'YYYY/MM/DD HH24:MI:SS') AS 현재날짜시간 (띄어쓰기 하면 안됨)
+		FROM DUAL;
+
+		RESULT : 
+			현재날짜시간시간
+			--------------------------------------
+			2021/08/13 23:06:05
+
+		출력 문자 옵션이 종류가 꽤 많다. 자세한 내용은 책을 참고하고 실무 시에 찾을 수 있을 정도만
+		기억해두자.
+
+		출력 결과의 언어를 직접 설정해줄 수도 있다.
+
+		TO_CHAR([날짜데이터(필수)], '[출력되길 원하는 문자 형태(필수)]', 
+		'[NLS_DATE_LANGUAGE = language(선택)]')
+
+		ex)	
+			SELECT 	SYSDATE,
+				TO_CHAR(SYSDATE, 'MM') AS MM,
+				TO_CHAR(SYSDATE, 'MON',	'NLS_DATE_LANGUAGE = KOREAN') AS MON_KOR,
+				TO_CHAR(SYSDATE, 'MON',	'NLS_DATE_LANGUAGE = JAPANESE') AS MON_JPN,
+				TO_CHAR(SYSDATE, 'MON',	'NLS_DATE_LANGUAGE = ENGLISH') AS MON_ENG
+			FROM DUAL;
+
+		RESULT : 
+			SYSDATE  MM   MON_KOR          MON_JPN          MON_ENG
+			-------- ---- ---------------- ---------------- ------------------------
+			21/08/13 08   8월              8月              AUG
+
+		출력 문자 옵션 중 시간 단위의 형식은 다음과 같다.
+
+		HH24 : 24시간으로 표현한 시간
+		HH / HH12 : 12시간으로 표현한 시간
+		MI : 분
+		SS : 초
+		AM, PM, A.M. , P.M. : 오전/오후 표시
+
+		ex)
+			SELECT 	TO_CHAR(SYSDATE, 'HH24:MI:SS') AS HH24MISS,
+				TO_CHAR(SYSDATE, 'HH12:MI:SS AM') AS HHMISS_AM,
+				TO_CHAR(SYSDATE, 'HH:MI:SS P.M.') AS HHMISS_PM
+			FROM DUAL;
+
+		RESULT : 
+			HH24MISS         HHMISS_AM                      HHMISS_PM
+			---------------- ------------------------------ ------------------------------
+			23:27:14         11:27:14 오후                  11:27:14 오후
+
+		TO_CHAR 함수로 숫자 데이터를 문자 데이터로 변환하는 방식은 그리 자주 사용하는 방식이
+		아니라고 한다. 자세한 내용은 책을 참고하고 실무에서 찾아볼 수 있을 정도만 기억해두자.
+
+		TO_NUMBER
+
+		문자 데이터를 숫자 데이터로 변환시켜주는 함수
+		TO_NUMBER('[문자열 데이터(필수)]', '[인식될 숫자형태(필수)]')
+		
+		TO_NUMBER 함수를 써야 하는 이유는 다음과 같다.
+		위의 예제에서는 암시적 형 변환이 자동으로 형을 바꿔주었지만,
+			SELECT '1,300' - '1,500'
+			FROM DUAL;
+		위와 같은 쿼리문은 동작하지 않는다.
+		따라서 만약 숫자 데이터가 가공된 문자 데이터로 저장되어 있고 그 데이터를 산술 연산에 사용하고자 할 경우
+		문자 데이터를 숫자 형태로 강제로 인식시켜 주어야 한다.
+
+		ex)
+			SELECT TO_NUMBER('1,300', '999,999') - TO_NUMBER('1,500', '999,999')
+			FROM DUAL;
+		
+		RESULT : 
+			TO_NUMBER('1,300','999,999')-TO_NUMBER('1,500','999,999')
+			------------------------------------------------------------------
+                                       	 				             -200
+
+		
+		TO_DATE
+
+			문자 데이터를 날짜 데이터로 변환시켜주는 함수
+		TO_DATE('[문자열 데이터(필수)]','[인식될 날짜형태(필수)]')
+
+		ex)
+			SELECT 	TO_DATE('2018-07-14', 'YYYY-MM-DD') AS TODATE1,
+				TO_DATE('20180714', 'YYYY-MM-DD') AS TODATE2
+			FROM DUAL;
+
+		RESULT : 
+			TODATE1  TODATE2
+			-------- --------
+			18/07/14 18/07/14
+
+		날짜 데이터끼리는 간단한 연산이 가능하다.
+		다음과 같은 연산을 통해 EMP 테이블에서 1981년 6월 1일 이후 입사한 사원을 찾는 것도 가능하다.
+
+		SELECT *
+		   FROM EMP
+		WHERE HIREDATE > TO_DATE('1981/06/01', 'YYYY/MM/DD');
+

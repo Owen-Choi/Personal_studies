@@ -1,0 +1,74 @@
+ARQ :  Automatic Repeat reQuest
+
+	TCP에는 ARQ가 포함되어있다.
+	ARQ는 reliable한 전송을 도와주는 친구인듯.
+	
+	ACK이 안오고 timeout이 일어나면 재전송을 해줘야 한다.
+	뭐 이런 일련의 과정을 프로토콜로 만든게 ARQ인데 그 중에 가장 간단한 것이
+		Stop and wait ARQ이다.
+		패킷을 보내고 ACK이 올때까지 기다렸다가 ACK이 오면 "앞에 것은 잘 갔으니까
+		그 다음꺼 전송"
+		마냥 기다린다. 뒤에 것을 보내도 되는 상황에서도 계속 기다린다.
+
+	효율적이진 못하지만 receiver는 어쨌든 데이터를 받긴 한다.
+	stop and wait에서는 32비트 sequence number 이런거 필요없다.
+	0과 1만 있으면 된다. 하지만 성능 문제때문에 쓰지는 않는다.
+
+	sender 입장에서는 패킷을 잃어버린 경우랑 ACK을 잃어버린 경우랑 둘 다 timeout이 일어난다.
+	즉 receiver는 패킷을 받고 ACK을 보냈지만 이 ACK이 손실된 경우 sender에게 똑같이 timeout이
+	일어나기 때문에 패킷을 다시 보내버린다.
+
+	이렇게 일어난 중복은 sequence number로 확인을 할 수 있고, 중복이 감지되면 그냥 버려버린다.
+	
+	ppt 5페이지, 1개의 패킷을 보낼 때 L/R + RTT의 시간이 든다. 
+	그런데 이 L/R + RTT 중에서 실제 자원을 쓴 시간은 L/R밖에 안된다.
+	propagation time은 2/RTT이다? 편도로 도착한 시간이라서.
+	
+	그렇다면 실제 자원을 사용한 Utilization time은 어떻게 구할까?
+		L/R / (RTT + L/R)이다.  당연하지? 실제 자원 쓴 시간 / 총 걸린 시간 
+	
+	이렇게 계산하면 엄청 작은 수가 나온다. 즉 utilize를 못한다. (underutilization)
+	
+
+	pipelining
+	
+	병렬처리. ACK이 오지 않아도 잔뜩 보낸다.
+	"in-flight" : 아직 ACK을 받지 않은 패킷들이 날아다닐 수 있게 하자~
+
+	pipelining에서는 ACK없이 보낼 수 있는 패킷의 수를 제한할 수 있다.
+	만약 3개까지는 ACK없이 보낼 수 있다면 앞에서 본 stop and wait보다 3배의 utilization을 갖는다.
+	그리고 1개로 제한되면 stop and wait와 같아진다.
+
+	3일때 Utilization time 계산은 다음과 같다.
+	3L/R / (RTT + L/R)
+	분모는 같고 분자 앞에만 3이 붙음
+
+	이 pipelined protocols에는 두 버전이 있다.
+	go Back N(GBN) 과 selective repeat.
+	
+	그렇다면 piplelined에서 손실에 어떻게 대응할까?
+	GBN(Sliding Window Protocol) : 
+		일단 참고로 N은 몇개의 패킷까지 허용할 지를 결정. 위의 예시에서 N은 3.
+		만약 pkt2가 손실돼고 pkt3을 받는다면, pkt3을 버리고 ACK1을 다시 보낸다.
+		sender는 일단 ACK0을 받았으니 0을 window에서 빼버린다. 더 이상 필요없기 때문.
+		1도 마찬가지.
+		여기서 윈도우를 오른쪽으로 옮기려면 제일 보낸 지 오래된 패킷이 와야된다.
+		그런데 ppt 예제에서는 ack2를 받을 수 없고, 따라서 윈도우를 오른쪽으로 옮길 수 없다.
+		이 경우에는 시간이 지남에 따라 time out이 일어나게 되고 윈도우에 있는 모든 패킷을
+		다시 보내게 된다. 
+		이 timer는 한대만 운영하고 가장 보낸 지 오래된 패킷에 초점을 맞춘다. 
+	이것이 GBN방식.
+	GBN의 receiver는 굉장히 심플하게 동작한다. sequence number가 이전과 일치하지 않으면
+	그냥 버려버린다. 
+	만약 sender가 duplicated ACK을 3번 받았으면 실제로는 그 ACK을 4번 받은 것 이해하기.
+	
+	
+	Selective Repeat :
+		GBN은 손실에 의해 순서가 틀려지면 버려버린다.
+		그런데 Selective Repeat은 out of order packet도 버리지 않는다. 
+		GBN은 타이머를 하나만 관리하는데, Selective Repeat에서는 Cumulative ACK을
+		안쓰고 individual ACK을 쓰기 때문에 타이머를 하나만 쓸 수 없다. 
+		즉 누적값이 아니라 온 패킷에 대한 ACK만을 보는 것.
+		이렇게 되면 모든 패킷이 타이머를 따로따로 운용해야한다. 
+	Selective Repeat은 GBN을 선택적으로 바꿨다- 정도로만 이해를 하면 된다고 한다. 
+	중요한 건 GBN을 이해하는 것이라고 함. 

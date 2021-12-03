@@ -1,0 +1,70 @@
+데이터 정렬, ORDER BY
+
+	ORDER BY 절은 데이터를 특정 기준에 따라 정렬해주는 sql문이다.
+	사용 위치는 SELECT 문의 가장 마지막이다.
+	ex) SELECT *
+		FROM EMP
+	    ORDER BY EMPNO;
+		==> EMP 테이블의 모든 열을 출력하고, EMPNO 열은 오름차순으로 정렬한다.
+
+	ex) SELECT *
+		FROM EMP
+	    ORDER BY DEPTNO ASC, SAL DESC;
+		==> EMP 테이블의 모든 열을 출력하고, DEPTNO 열을 오름차순으로 (우선) 정렬하되, DEPTNO의 데이터가 
+		       중복되는 항목에 한해서는 SAL 열을 기준으로 내림차순으로 정렬한다.
+
+		*ORDER BY 절은 실무에서는 잘 사용하지 않는다고 한다. 정렬에 드는 비용을 무시할 수 없기 때문.
+		따라서 꼭 필요한 경우가 아니라면 되도록 사용하지 않는 것을 권장한다고 한다.
+
+4장 끝. 지금까지 배운 SELECT문 : 
+
+	SELECT DISTINCT EMPNO AS EMPLOYEE_NAME
+		FROM EMP
+	ORDER BY EMPNO DESC;
+
+정확하고 구체적인 검색, WHERE 절 :
+
+	WHERE절은 뒤에 붙는 조건문을 충족시키는 행만을 출력한다.
+	조건문을 충족시키는 데이터만 출력하기 때문에 구체적이고 정확한 검색이 가능해진다.
+	사용법은 다음과 같다.
+	ex) SELECT *
+		FROM EMP
+	    WHERE JOB = 'SALESMAN';
+		==> EMP테이블의 모든 열 중 JOB 열의 데이터가 'SALESMAN'인 데이터만 출력
+
+	WHERE 절의 뒤에 붙는 조건문은 AND, OR 연산자와 함께 쓸 수 있다.
+	ex) SELECT *
+		FROM EMP
+	    WHERE JOB = 'SALESMAN'
+		AND DEPTNO = 30;
+
+	ex) SELECT *
+		FROM EMP
+	    WHERE JOB = 'SALESMAN'
+		OR DEPTNO = 30; 
+
+	*실무에서는 OR 연산자보다는 AND 연산자를 더 선호한다고 한다.
+	정확한 기준에 따라 정확한 데이터를 선별해야 하는 경우가 많이 때문.
+ 
+	WHERE절의 조건문에는 산술 연산자도 사용할 수 있다.
+		ex) SELECT *
+			FROM EMP
+		   WHERE SAL * 12 = 36000;
+	마찬가지로 비교연산자도 사용할 수 있다.
+		ex) SELECT *
+			FROM EMP
+		    WHERE SAL >= 3000;
+		비교연산자는 문자열에도 사용할 수 있다.
+			ex) SELECT * 
+				FROM EMP
+			    WHERE ENAME >= 'F';
+				==> ENAME열 중에서 시작 알파벳이 F보다 뒤인 항목만 출력
+		
+			ex) SELECT *
+				FROM EMP
+			     WHERE ENAME <= 'FORZ';
+				==> 만약 ENAME 열에 'FIND'라는 데이터가 있으면, 첫번째 문자가 일치하고, 두번째 문자인 I는 조건식의
+				       O보다 작으므로 (빠르므로) 조건식에 해당되어 출력되게 된다.
+					* 자주 사용되지는 않는다고 하니 가볍게 이해만 하고 넘어가자.
+
+ 
