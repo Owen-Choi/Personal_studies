@@ -57,7 +57,7 @@ Transaction :
 		Serial schedule : 순차적인 일정.
 			하나의 트랜잭션이 끝나면 다음 트랜잭션이 실행되고, 순차적으로
 			실행되는 스케쥴 구조.
-
+			이것은 concurrent가 아니다?
 		Serial Schedule에서 실행의 결과는 항상 Consistent하다.	
 		
 		Schedule 3 :
@@ -170,3 +170,10 @@ Transaction :
 			사용할 수 있는 격리수준.
 
 		read-committed : commit이나 rollback이 일어나야 다른 트랜잭션에서 데이터를 사용할 수 있다.
+
+
+	read-committed와 Repeatable read의 차이점 : 
+		read-committed 는 데이터를 읽을 때 검증된 데이터를 읽을 수 있는 것 만을 보장해준다.
+		읽을 때만 관여한다고 생각하면 되는데, 이 때문에 한번 데이터를 읽었다면 값의 수정은 제약이 없다.
+		하지만 Repeatable read는 값의 수정이 불가능하다. 즉 반대쪽 transaction이 자원을 아예 놓아야
+		그 자원을 읽어들일 수 있다. 
