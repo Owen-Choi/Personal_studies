@@ -23,6 +23,7 @@ XML 스키마
 
 		<xs:element name="xxx" type="yyy"/> 와 같은 형식으로 포맷 지정해줄 수 있다.
 		<xs:restriction base="xs:string">과 같은 형식으로 제약사항을 나타낼 수 있다. 
+			즉 이 restriction 바디 안에 있는 값들은 xs:string 타입의 제약을 받고, 그 제약은 아래처럼 정의할 수 있다.
 		<xs:pattern value="[a-z]"/> 여기서 [a-z]는 a부터 z중 "한글자"를 의미하는 것이다.
 
 		<xs:pattern value="([a-z][A-Z])*"/> : [a-z][A-Z] 이렇게 글자 2개가 0개 이상(*)이니까
@@ -40,6 +41,16 @@ XML 스키마
 			element의 값이 없는 것.
 
 		attribute가 없으면 simple type. attribute가 있으면 complex type
+
+		<xs:element name="person" type="persontype"/>
+		<xs:complexType name="persontype"> 
+		 <xs:sequence>    
+		<xs:element name="firstname" type="xs:string"/>    
+		<xs:element name="lastname" type="xs:string"/>  
+		</xs:sequence>
+		</xs:complexType>
+		personType을 우리가 정의하고 person을 정의할 때 이 type을 지정해줌.
+
 		만약 어떤 element안에 다른 값들은 없고 element만 있다면 mixed="true" 를 추가할 필요가 없지만
 		한 element안에 다른 element와 값들이 섞여있다면 mixed="true"를 추가해준다.
 
