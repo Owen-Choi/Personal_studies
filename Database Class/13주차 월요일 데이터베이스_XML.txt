@@ -57,6 +57,7 @@ XML :
 			<!ELEMENT> cost (#PCDATA)>
 		]>
 	여기까지가 DTD이다. 아래 코드는 xml이고, 이 두개가 한 파일에 있다면 이는 내부 서브셋이다.
+	그리고 root element의 선언부를 보면 알 수 있듯이 이 dtd는 internal dtd 이다.
 	외부에서 DTD가 선언될 경우 다음과 같이 경로를 명시해야 한다.
 	<!DOCTYPE food SYSTEM "food.dtd">
 	
@@ -74,6 +75,7 @@ XML :
 	최소 하나의 element를 가져야 한다면 <!ELEMENT element_name (child_name+)>
 	0또는 그 이상의 occurence를 나타내야 한다면 <!ELEMENT element_name (child_name*)>
 		ㄴ 사용처를 잘 모르겠네. not null과 비슷한 기능인가?
+		ㄴ 괄호 안의 element를 가질 수도 있고 안가질 수도 있다. 불확실성을 나타낼 때 사용.
 	0또는 한개의 occurence만을 나타내야 한다면 <!ELEMENT element_name (child_name?)>
 
 //////////////////////////////////////////////////////////////////////////////
