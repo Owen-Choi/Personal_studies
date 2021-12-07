@@ -72,7 +72,7 @@ LAN
 	어떤 것들이 있을까 하는 정보들이 공유가 되어야 한다.
 	
 	그렇다면 아이피 주소를 가지고 어떻게 맥 주소를 알아올 수 있을까?
-	이것에 대한 것이 ARP이다.  내가 ~~한 IP 주소를 보낼려면 그것에 해당하는 맥주소는 뭐냐 라는 것을
+	이것에 대한 것이 ARP(Address Resolution Protocol)이다.  내가 ~~한 IP 주소를 보낼려면 그것에 해당하는 맥주소는 뭐냐 라는 것을
 	알아올 수 있는 방법이 필요한다. DNS와 비슷하다고 하는데 어떤 면에서 비슷하지?
 		ㄴ DNS는 도메인 네임을 가지고 IP를, 혹은 그 역을 반환해준다. ARP도 비슷하게 IP주소를 보내면 맥 주소를 반환한다.
 	여튼 ARP는 broadcast와 비슷하게 ~~~IP를 가지고 있는 사람은 맥을 보내줘~~ 하고 요청을 보내면
@@ -131,6 +131,9 @@ Ethernet
 	무선링크의 경우 링크레이어에서 ARQ를 쓰기도 한다. 무선 환경에서는 손실이 많이 일어나기 때문.
 	하지만 Ethernet은 유선이라는 점.
 
+	Ethernet frame이 따로 있는 개념인가? address(source, dest) || type || payload || CRC 로 구성이 되는데
+	일반 frame이랑 차이점이 있는지 모르겠다.
+
 Switch
 
 	게이트웨이 라우터를 거쳐서 들어온 서브넷 안에 다시 라우터가 있는 경우는 드물다. 아주 규모가 큰 네트워크에서만 그렇고, 
@@ -140,6 +143,7 @@ Switch
 	store and forward, selectively forward, transparent, plug and play, self-learning
 
 		store and forward C라는 애가 B로 보내고싶으면 스위치는 C로부터 받은 정보를 B에게 보낸다. 이것이 store and forward?
+			ㄴ frame을 받으면 먼저 에러를 검사하고 보내는 방식. 에러 검사 없이 바로 보내는 방식은 cut through라고 한다.
 			dummy switch : 신호를 보낸 노드 빼고 모든 노드에게 신호를 전달하는 바보같은 공유기
 		transparent : 노드가 데이터를 받을 때 스위치로부터 받았다는 것을 느끼지 못하고 노드로부터 바로 받았다고 인식한다.
 		스위치는 plug and play 방식으로 동작한다.
@@ -161,9 +165,11 @@ Switch
 	6-12 , A가 G로 데이터를 보내고, G가 A에게 다시 회신을 하는 경우 몇번의 링크를 거칠까?
 	16번이다. 14번이 아닌 이유는 S3에서 G,H,I를 모두 보기 때문이다.
 	그리고 self learning은 총 7번 일어난다. A가 G로 갈때 4번 , 돌아올때 3번이 일어난다.
+						ㄴ 돌아올 때 3번인 이유는 S4는 A로 가는 길을 self-learning을 통해 알고있기 때문에
+							S2로 빠지지 않고 바로 S1으로 간다.
 	1시간 25분 참고.
 	E는 G로 가는 길을 모르고, 그렇기 때문에 4번의 링크 이동이 일어나고,  E에서 G로 이동하는데 3번의 링크 이동이 일어난다.
-	
+	이런 것들이 가능한 이유는 self learning 때문!
 
 
 라우터와 스위치의 공통점은 forwarding table에 따라 목적지를 결정한다.
@@ -174,9 +180,25 @@ Switch
 		
 	만약 학교에 와서 학교 컴퓨터를 켜서 구글에 접속한다고 생각해보자.
 	처음 컴퓨터를 켜서 DHCP가 돌아가는 라우터에게 IP 주소와 로컬 DNS정보를 받아온다.
-	ㅅㅂ 소리 녹화가 안됐네...?
 		DNS 정보를 받아오고 ARP를 통해서 맥 주소로 노드에게 가고, 등의 과정을 거친다.
 		IP를 받은 뒤 웹 이기 때문에 HTTP connection을 맺어야 하고, 이를 위해 TCP 핸드쉐이크 과정을 거친다.
 		여기서 SYN ACK이 사용된다. 
 		전반적인 구조는 이와 같았다. 
-	
+
+	다음과 같이 정리해보겠다.
+	처음 접속하는 pc는 자신의 IP주소, 로컬 DNS 서버 주소, first-hop router의 주소가 필요하다.
+	이 정보를 얻기위해 우리는 DHCP를 이용한다.
+		Ethernet frame은 LAN에서 broadcast하고 이는 DHCP에서 돌아가는 라우터에 들어간다.
+		DHCP는 이 frame에서 IP를 Extract하고 UDP로 demultiplexing 한다?
+		그리고 클라이언트에게 DHCP ACK을 보내고, 클라이언트는 이 정보를 demultiplexing한다.
+		(아마 UDP라서 간단할거임)
+	이제 클라이언트는 자신의 IP주소, 로컬 DNS 서버 주소, first-hop router의 주소를 가지고있다.
+	이제 구글에 접속해야 하는데, www.google.com이라는 도메인에 대한 IP주소가 필요하다.
+	우리는 DNS를 이용한다.
+		그리고 DNS에게 정보를 알아올려면 다른 네트워크로 이동해야 하고, 그러기 위해선 우리는
+		가장 가까운 라우터(first hop router)로 이동해야한다. 즉 first hop router의 MAC이 필요하다.
+		DHCP로부터 주소는 받아왔으니 ARP를 이용해서 라우터의 MAC을 받아오는 작업이 필요하다.
+	이제 라우터로 이동했다면 OSPF나 BGP 등으로 완성된 라우팅 테이블을 참조하여 DNS 서버로 이동한다.
+	이제 DNS를 통해 google이란 도메인의 IP도 알았다.
+	다음으로는 HTTP connection을 맺어야 하는데, 여기서 3way handshake (SYN ACK)이 사용된다.
+	자 이제 connection도 맺어졌다. 이로서 구글에 접속할 수 있게 된 것이다.
