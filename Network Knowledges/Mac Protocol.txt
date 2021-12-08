@@ -39,13 +39,18 @@
 				여기서 CD는 Collision Detection 인듯.
 				일반적으로 이더넷, 즉 유선 체계에서 사용 가능하다.
 				충돌을 완벽하게 커버하지 못하는 CSMA의 단점을 보완하기 위해
-				Binary Exponential back off 개념을 사용한다.
+				만약 transmission 도중 다른 노드의 transmission이 감지되지 않는다면 그냥 그대로 다 보낸다.
+				하지만 다른 노드의 전송이 감지된다면 일단 전송을 정지하고(abort) Binary Exponential backoff상태로 들어간다.
+				그렇다면 Binary Exponential back off 가 무엇일까?
 					
 		Binary Exponential back off
 			한번 collision이 발생하면 다음부터는 조심해서 보낸다.
-			충돌이 나면 그 다음부터는 확률적으로 보낼 지 말 지 결정함
+			random time을 할당받고 이 시간이 지나야 전송한다.
 			0부터 특정한 값 사이에 있는 값을 랜덤으로 받고 idle한 동안 하나씩 줄이다가
 			이 값이 0이 되면 전송한다.
+			그런데 이 시간이 너무 크면 오래 기다리므로 비효율적이고, 작으면 충돌이 자주 일어난다.
+			그렇다면 어떻게 설정해야 할까?
 			처음에는 이 값을 1로 잡는다. 이렇게 해서 충돌이 나면 이 구간을 2배로 늘린다.
 			m번의 충돌이 있으면 0에서 2^m -1 까지로 구간을 잡는다.
+			즉 충돌이 많으면 많을수록 랜덤 타임의 범위는 넓어지고 더 다양한 시간대를 할당받음으로서 충돌을 줄일 수 있다.
 			이것이 Binary Exponential back off
