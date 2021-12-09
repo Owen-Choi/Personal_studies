@@ -1,4 +1,4 @@
-TCP, sender 와 receiver 사이에 일어나는 reliable한 전송을 위한 것들에 대해 수요일에 퀴즈를 봄.
+	`TCP, sender 와 receiver 사이에 일어나는 reliable한 전송을 위한 것들에 대해 수요일에 퀴즈를 봄.
 
 tcp connection management 마지막 부분 : 
 	Go-Back-N 퀴즈 주로 나옴.
@@ -26,7 +26,7 @@ Principles of congestion control :
 		그렇다면 transport layer의 sender는 이것을 어떻게 다뤄야 할까
 		application이 데이터를 보내라! 해서 무조건 다 나가는 것이 아니라 transport layer에서
 		그것을 데이터를 관리하고 내보낸다. 데이터를 보낼 때 congestion 상태를 보고 보냄.
-		
+	
 
 		일단 Congestion이 일어나면 어떤 비효율성이 있을까?
 		lamda(in) : 단위 시간당 보내는 bit라고 생각

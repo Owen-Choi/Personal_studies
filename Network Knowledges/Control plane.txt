@@ -41,7 +41,7 @@
 			메인 알고리즘은 다익스트라. 관련 내용은 ppt 참고.
 
 	distance vector 알고리즘 : 
-		
+		Distributed, Asynchronous
 		u -> x -> y 인 상황에서 x가 u에게 "나 y로 갈려면 1 필요해" 라고 말한다. 
 		그럼 u가 그 정보를 받고 y로 가는 길의 cost를 계산한다.
 			메인 알고리즘은 Bellman-Ford equation에 기초한다.	
