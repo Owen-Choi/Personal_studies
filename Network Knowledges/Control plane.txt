@@ -2,8 +2,11 @@
 -라우팅 알고리즘이 만든다.
 
 컨트롤을 각각의 라우터들별로 하는 방식(per-router control)
-	다른 라우터들과 소통하면서 데이터를 수집한다.
+	다른 라우터들과 소통하면서 데이터를 수집한다. 전통적인 방법이다.
 라우터들이 소속된 ISP가 라우터를 중앙 통제 하는 방식(logically cenralized control)
+즉 Control plane을 수행하기 위한 두가지 방법이 있고, 여기에
+	Per-router plane과
+	logically centralized control이 있는 것이다.
 
 	per-router에서 제어를 하는 윗부분이 control plane. ppt를 보면 라우터 상호간에 복잡하게 얽혀있다.
 	centralized에서 제어를 하는 control plane은 ISP로부터 받아오는 구조이다. 
@@ -49,5 +52,7 @@
 	LS와 DS 비교
 
 		LS는 답이 원샷으로 뿅 나온다. 
-		DS는 시간이 지나면서 답이 점점점점 나오는 것이다.
-		
+			+ LS는 모든 정보를 다 알고있지만 이웃으로 가는 정보만 말해준다.
+		DV는 시간이 지나면서 답이 점점점점 나오는 것이다.
+			+ DV는 오직 연결된 이웃에게만 정보를 주는데, 이 정보는 자기 자신으로부터 모든
+			노드로 가는 정보이다.
