@@ -1,0 +1,38 @@
+1. 
+
+	man (명령어) : (명령어)에 대한 메뉴얼
+	
+	pwd : 현재 디렉토리의 절대 경로명을 출력한다.
+
+	cd : 그냥 cd만 사용하면 홈 디렉토리로 이동. 뒤에 절대경로나 상대경로가 붙으면 해당 위치로 이동
+
+2.
+	
+	ls 
+		-a(숨김 파일 포함한 모든 파일 표시), -d(디렉토리 자체의 정보),
+		 -i(inode 번호 표시), -l(파일의 상세 정보), -A(.과 .. 제외한 모든 파일), 
+		-F(파일 종류 표시), -L(심벌릭 링크@의 원본파일 정보), -R(하위 디렉토리 목록까지 출력)
+
+	mkdir : 디렉토리 생성
+		mkdir -p temp/mid/han : 중간 디렉토리가 없어서 생성이 안되지만 -p 옵션이 디렉토리를 자동으로 생성해준다.
+
+	cat, more, less : 텍스트 파일 읽기
+
+	cp : 
+	파일 복사하기
+		cp -i file1 file2 : 만약 file2가 이미 존재하면 덮어쓸 것인지 물어보기
+		cp - r file1 file2 : file2를 즉석에서 생성
+		cp text1 tmpdir : tmpdir 디렉토리에 text1 파일 복사해서 생성
+		cp text1 tmpdir/text2 : tempdir 디렉토리에 text2라는 이름으로 text1 파일 복사해서 생성
+		cp /etc/hosts /etc/services tempdir : tempdir 디렉토리에 hosts와 services 한번에 복사해서 생성
+		
+	디렉토리 복사하기
+		cp -r tempdir tempdir1 : tempdir의 모든 내용을 똑같이 가지는 tempdir1 디렉토리를 생성
+			여기서 디렉토리를 복사할 때는 반드시 -r을 써야 한다.
+
+	mv : 파일을 이동시키거나 파일명을 바꾼다.
+		파일을 다른 파일로 이동시키는 것은 결국 원본 파일의 파일명을 다른 파일명으로 바꾸는 것이기 때문에
+		파일명을 바꿀 때도 mv 명령어를 쓴다. 
+		mv data1 tempdir : data1 파일을 tempdir 디렉토리로 이동
+		mv text1 tempdir/data1 : text1 파일을 tempdir 디렉토리로 옮기면서 이름도 data1으로 바꾼다.
+		mv tempdir/data1 tempdir/data2 tempdir2 : tempdir아래에 있는 data1과 data2를 tempdir2 로 옮긴다.
