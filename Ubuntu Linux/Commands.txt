@@ -1,4 +1,4 @@
-1. 
+1.  아주 기본적인 명령어
 
 	man (명령어) : (명령어)에 대한 메뉴얼
 	
@@ -6,7 +6,7 @@
 
 	cd : 그냥 cd만 사용하면 홈 디렉토리로 이동. 뒤에 절대경로나 상대경로가 붙으면 해당 위치로 이동
 
-2.
+2. 디렉토리 및 파일과 관련된 명령어
 	
 	ls 
 		-a(숨김 파일 포함한 모든 파일 표시), -d(디렉토리 자체의 정보),
@@ -36,3 +36,25 @@
 		mv data1 tempdir : data1 파일을 tempdir 디렉토리로 이동
 		mv text1 tempdir/data1 : text1 파일을 tempdir 디렉토리로 옮기면서 이름도 data1으로 바꾼다.
 		mv tempdir/data1 tempdir/data2 tempdir2 : tempdir아래에 있는 data1과 data2를 tempdir2 로 옮긴다.
+
+	rm : 파일을 삭제한다. 
+		rmdir에서 디렉토리가 비어있지 않으면 오류메세지가 출력되었다.
+		여기서 rm에 -r 옵션을 붙인 뒤 디렉토리를 지정해주면 비어있지 않아도 바로 삭제할 수 있다.
+		만약 하위 디렉토리가 많다면 rm -i 를 사용하면 된다.
+		이 경우 하위 디렉토리마다 삭제할 것인지 계속 물어보고, 그렇기에 원하는 하위 디렉토리만 지울 수 있다.
+
+	touch : 빈 파일 생성 및 접근시간 변경. 웨 쓰는거지?
+
+	grep : 지정한 파일에서 특정 패턴 위치 찾기
+		grep ENFP data : data 파일에서 ENFP라는 패턴을 찾는다.
+		-i : ignore case : 대소문자 모두 검색
+		-l : 지정한 패턴이 포함된 파일명을 출력
+		-n : 행 번호를 함께 출력
+	
+	find : 지정한 디렉토리에서 파일의 위치를 검색하기
+		find tempdir tempName : tempdir에서 tempName 파일 위치 찾기
+		만약 특정 계정이 소유한 파일을 찾고싶다면 -user 옵션 사용
+		일괄처리 : -exec 또는 -ok 옵션 사용하기
+		find /tmp -user user1 -exec rm {} \;
+			tmp 디렉토리에서 user1이 소유한 모든 파일을 삭제하는 명령어
+		exec같은 경우는 확인 없이 다 지워버린다. 반면에 ok 옵션은 일일이 다 물어본다.
