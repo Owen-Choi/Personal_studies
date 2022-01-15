@@ -1,0 +1,45 @@
+CRIU 논문
+
+4가지 시나리오
+
+	첫번째 : 플랫폼1에서 플랫폼2로의 단방향 LM
+	두번째 : 플랫폼2에서 플랫폼1로의 단방향 LM
+	세번째 : 한개의 서비스에 대한 양방향 LM
+	네번째 : 세개의 서비스에 대한 양방향 LM
+
+	첫번째 시나리오 요약 : 
+		플랫폼1에서 체크포인트 저장을 한 뒤 메모리 사용량이 1.69GB 에서 1.56GB로 줄었고,
+		플랫폼2에서 체크포인트 불러오기를 한 뒤 메모리 사용량이 1.86GB에서 2.28GB로 늘었다.
+		플랫폼1에서 메모리가 줄어드는 이유는, 정확하게는 해석하지 못했지만 대강 체크포인트 저장이 완료되면
+		호스트의 VM이 몇초가량 삭제된다고 하고, 세션이 이를 다시 자동으로 연결해준다고 한다. 
+		호스트 VM이 꺼지는 것이 메모리가 (일시적으로?)감소하는 이유인 것 같다.
+		플랫폼2의 체크포인트 불러오기에 시간이 많이 들고 메모리 용량이 증가한 이유는 여러가지 기능
+		(fork and pre-mmaps, open file mappings, open shared mappings, 
+			dive into restorer context and restore mapping in their places.)등을 수행하고 저장하느라
+		증가한 것으로 이해하면 될 것 같다.
+	두번째 시나리오 요약 : 
+		장황하게 설명이 적혀있지만 완벽하게 해석은 못하겠다....
+		체크포인트 저장과 불러오기의 성능?에 피지컬 메모리의 페이징이 주요한 작용을 한다는 형식의 설명인 것 같다.
+		(Actually, the number of pages moved is decided on how effective the VM handles and 
+		manipulating the memory pages. It will take the longer time for every page to transfer to the destination 
+		server due to the number of pages that have been changed or arranged.)
+		또 마지막 3줄을 살펴보면  (The most difficult problem is the paging of 
+		physical memory, as it is the main factor affecting paging downtime, that is, when the services in the virtual 
+		machine are not fully available) (가장 어려운 문제는 물리적 메모리의 페이징이다. 페이징 다운타임에 영향을 주는
+		주된 요인이기 때문이다. 그리고 이것이 잘 이루어지지 않으면 가상 머신의 서비스를 완전히 활용하지는 못한다고 한다.)
+		어쨌든 실험의 결과는 시나리오 1과 거의 동일한 양상을 띈다.
+		페이지에 관한 내용은 다시한번 논문을 정확하게 해석해봐야 알 것 같다.
+	세번째 시나리오 요약 : 
+		플랫폼1의 체크포인트 저장에서 메모리 변화는 2.09GB에서 1.99GB로 감소,
+		플랫폼1의 체크포인트 불러오기에서 메모리 변화는 1.97GB에서 2.70GB로 증가,
+		플랫폼2의 체크포인트 저장에서 메모리 변화는 2.62GB에서 2.34GB로 감소,
+		플랫폼2의 체크포인트 불러오기에서 메모리 변화는 2.34GB에서 2.76GB로 증가.
+		체크포인트 저장에 걸리는 시간은 플랫폼1이 0.994초, 플랫폼2가 1.037초로 플랫폼2가 정말 미세하게 느렸고,
+		체크포인트 불러오기에 걸리는 시간은 플랫폼1이 44.8초, 플랫폼2가 18.111초로 플랫폼2가 월등히 빨랐다.
+		논문 설명에 따르면, memory page contamination rate(메모리 페이지의 오염율?)이 미리 처리된? 인쇄된? 프로세스들의
+		응답 비율보다 높다면 pre-copy work는 비효율적으로 변하고 다른 한쪽은 즉시 VM 머신을 멈추고 메모리의 모든 page를 
+		카피해야한다고 한다. 나름의 해석을 더하자면, pre-copy work를 통해 미리 이미지? 프로세스?를 캐시 처럼 활용할 수 있는 것
+		같고 memory page contamination이 일어나면 pre-copy된 것들을 쓰지 못하는 것 같다. 그리고 미리 저장해둔 것들을
+		활용할 수 없는 수준이 되면 다른 한쪽은 메모리의 카피에만 집중을 해야하므로 시간이나 메모리 등 효율이 급격히 떨어지고,
+		시나리오3에서는 플랫폼1이 플랫폼2에 비해 메모리나 저장 시간 등이 월등히 비효율적이므로 플랫폼1에서
+		위의 현상이 일어났다고 예상된다. 물론 뇌피셜임.
