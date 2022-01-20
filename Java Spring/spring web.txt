@@ -22,5 +22,18 @@
 
 
 MVC
+	html 페이지를 만들어놓고 controller에서 제어하는 방식.
+	Model, View, Controll의 약자이다.
+	어노테이션 @ 을 사용하여 어떤 페이지에 대해 컨트롤할 지 지정하며 코드 내에서 데이터에 접근하고,
+	페이지의 이름을 반환하면 view resolver가 해당 페이지를 찾아서 값을 대입해준다.
 
+API
+
+	@ResponseBody 어노테이션을 통해 데이터 자체를 다룰 것이라고 알린다.
+	일반 문자열의 경우 html에서 바로 문자열로 띄우지만, 객체를 넘기는 경우에는 Spring에서 자체적으로 JSON으로 
+	변환해주는 과정을 거친 뒤 JSON의 형식으로 데이터가 전달된다.
+	여기서 기본 문자처리(string 처리)는 StringHttpMessageConverter라는 녀석이 해주고,
+	기본 객체처리는 MappingJackson2HttpMessageConverter 라는 녀석이 해준다.
+	Jackson같은 경우는 Json을 공부하면서 접한 적이 있다. parser의 일종이라고 알고있음.
+	참고로 XML과 같은 형식이 필요한 경우에는 요청에 따라 라이브러리를 등록해서 XML의 형식으로도 반환할 수 있다고 함.
 	
