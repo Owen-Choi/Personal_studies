@@ -26,6 +26,7 @@ MVC
 	Model, View, Controll의 약자이다.
 	어노테이션 @ 을 사용하여 어떤 페이지에 대해 컨트롤할 지 지정하며 코드 내에서 데이터에 접근하고,
 	페이지의 이름을 반환하면 view resolver가 해당 페이지를 찾아서 값을 대입해준다.
+	스프링 resources 폴더 하위의 templates에 존재하는 html 파일들이 동작한다.
 
 API
 
