@@ -38,3 +38,73 @@ API
 	Jackson같은 경우는 Json을 공부하면서 접한 적이 있다. parser의 일종이라고 알고있음.
 	참고로 XML과 같은 형식이 필요한 경우에는 요청에 따라 라이브러리를 등록해서 XML의 형식으로도 반환할 수 있다고 함.
 	
+
+비즈니스 로직 : 
+
+	Controller, Service, Repository로 나뉜다?
+	Service의 경우 말 그래도 회원가입(join)과 같은 기능을 구현하는 곳이고,
+	Repository의 경우 Service의 기능을 구현하는데 필요한 기능들을 구현하는 곳 같다.
+	즉 MemberService 클래스의 기능을 구현하기 위해서는 MemberRepository가 필요한 식이다.
+	그리고 그럴때 @Service, @Repository, @Autowired 등을 사용한다.
+		ㄴ 이것이 스프링빈을 등록하는 2가지 방법 중 "컴포넌트 스캔과 자동 의존관계 설정" 방법
+
+의존성 주입(Dependency Injection) : 
+
+	필드 주입, 생성자 주입, setter 주입이 있다.
+	생성자 주입같은 경우는,
+		@Autowired
+		public MemberController(MemberService memberService) { 
+			this.memberService = memberService
+		}
+		와 같이 생성자를 통해서 의존성을 주입하는 것이다.
+	필드 주입같은 경우는,
+		@Autowired private MemberService memberService; 
+		와 같이 필드에서 직접 의존성을 주입하는 것이다.
+		별로 좋은 방법은 아니라고 한다.
+	setter 주입같은 경우는, 
+		@Autowired
+		public void setMemberService(MemberService memberService) {
+			this.memberService = memberService;
+		}
+		와 같이 생성자 주입과 비슷한 양상을 띄는데, setter에서 의존성을 주입하는 것이다.
+		단점으로는 setter주입을 하기 위해서는 setter가 public 으로 노출이 되어있어야 하는데 
+		setter를 중간에 바꿀 일이 거의 없다고 하지만 public으로 노출됨으로써 바뀔 수 있고
+		이로 인해 문제가 생길 수도 있다고 한다.
+
+	
+	결론은, 의존관계가 실행중에 동적으로 변하는 경우는 아예 없다고 하니 생성자 주입이 강력히 추천된다고 한다.
+
+스프링빈 등록하는 2가지 방법 : 
+
+	일단 스프링빈이 뭐지?앞에서 말한 스프링 컨테이너에 들어있는 객체가 스프링 빈인가?
+	1. 컴포넌트 스캔과 자동 의존관계 설정
+	2. 자바 코드로 직접 스프링 빈 등록하기
+
+		1번 방법에서 컴포넌트 애노테이션(@Component)이 있으면 스프링 빈이 자동 등록된다고 한다.
+		또한 컴포넌트 애노테이션을 포함하는 애노테이션들(@Controller, @Service, @Repository)이 있어도 빈이 등록된다.
+		그렇다면 아무 패키지나 만들어서 하위 클래스에 애노테이션을 추가하면 스프링 빈으로 등록이 될까?
+		프로그램이 실행되는 패키지와 동일하거나 그보다 상위의 패키지에서는 스프링 빈 등록이 안된다고 한다.
+
+		2번 방법은 (프로그램이 실행되는 패키지 하위에?) 클래스를 하나 만들고 @Configuration 애노테이션을 붙인 
+		클래스를 만든다. 그리고 스프링 빈으로 만들 클래스들을 @Bean 애노테이션으로 명시해준다.
+
+	코드 : 
+
+		@Configuration
+		public class SpringConfig {
+		
+			@Bean
+			public MemberService memberService() { 
+				return new MemberService(memberRepository());
+			}
+			
+			@Bean
+			public MemberRepository memberRepository() { 
+				return new MemoryMemberRepository();
+			}
+		}
+		컨트롤러 같은 경우에는 1번의 방법을 사용한다. 즉 @Controller로 컴포넌트 스캔 및 @Autowired로 등록한다.
+		이 부분은 어쩔 수 없다고 한다. 
+
+	편한건 확실히 1번 방법이 편하지만, 2가지 방법 모두 장단점이 있다고 한다.
+	
