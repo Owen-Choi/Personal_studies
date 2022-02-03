@@ -1,0 +1,16 @@
+$sudo apt update
+$ sudo apt upgrade
+$ sudo apt install build-essential
+$ sudo apt install pkg-config
+$ sudo apt install libnet-dev python-yaml libaio-dev
+$ sudo apt install libprotobuf-dev libprotobuf-c-dev protobuf-c-compiler protobuf-compiler python-protobuf libnl-3-dev libcap-dev
+
+$ sudo curl -O -sSL http://download.openvz.org/criu/criu-3.11.tar.bz2
+$ sudo tar xjf criu-3.11.tar.bz2
+
+$ cd criu-3.15
+$ sudo make
+$ sudo cp ./criu/criu /usr/local/bin
+$ cd
+
+$ sudo criu check
