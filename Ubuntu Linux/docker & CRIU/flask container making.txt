@@ -1,0 +1,73 @@
+mkdir app
+
+cd app
+
+python3 -m venv venv
+
+source venv/bin/activate
+
+pip install Flask
+
+nano app.py
+
+<0부터 1까지 카운팅하는 웹페이지를 띄우는 코드>
+/////////////////////////////////////////////
+from flask import Flask, render_template, Response
+import time
+app = Flask(__name__)
+
+@app.route('/content') # render the content a url differnt from index. This will be streamed into the iframe
+def content():
+    def timer(t):
+        for i in range(t):
+            time.sleep(5) #put 60 here if you want to have seconds
+            yield str(i)
+    return Response(timer(100), mimetype='text/html') #at the moment the time value is hardcoded in the function just for simplicity
+
+@app.route('/')
+def index():
+    return render_template('test.html.jinja ') # render a template at the index. The content will be embedded in this template
+
+if __name__ == '__main__':
+    app.run(use_reloader=False,host='0.0.0.0', debug=True)
+/////////////////////////////////////////////
+
+nano Dockerfile
+
+<docker build에 필요한 docker file을 작성>
+/////////////////////////////////////////////
+FROM python:3
+
+# set a directory for the app
+WORKDIR /app
+
+# copy all the files to the container
+COPY . .
+
+# install dependencies
+RUN pip3 install flask
+
+# tell the port number the container should expose
+EXPOSE 5000
+
+# run the command
+CMD ["python", "./app.py"]
+/////////////////////////////////////////////
+
+docker build -t <image-name> .	
+
+docker images		// 이미지 추가 확인
+
+docker run <image-name>	//바로 실행
+
+or
+
+docker create -i --name <container-name> <image-name>
+
+docker ps --all		// 컨테이너 등록 확인
+
+docker start <container-name>
+
+docker logs <container-name>
+
+후에 나오는 링크 ctrl과 함께 눌러서 웹사이트 접속
