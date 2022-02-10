@@ -1,0 +1,31 @@
+/usr/bin/kolourpaint
+
+//////////////////////////////////////////////////////
+FROM ubuntu:18.04
+
+# set a directory for the app
+WORKDIR /usr/bin
+
+RUN apt-get update \
+    && apt-get -y install kolourpaint4
+
+# copy all the files to the container
+COPY . .
+
+# tell the port number the container should expose
+EXPOSE 5000
+
+# run the command
+CMD ["kolourpaint"]
+
+///////////////////////////////////////////////////////
+xhost +local:docker
+
+docker run -v /tmp/.X11-unix:/tmp/.X11-unix \
+-e DISPLAY=$DISPLAY \
+painter
+
+time docker create -v /tmp/.X11-unix:/tmp/.X11-unix \
+-e DISPLAY=$DISPLAY \
+--name pc5 painter
+
