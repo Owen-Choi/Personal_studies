@@ -1,0 +1,52 @@
+프론트
+
+	layout
+
+		dp : 실습에서 textView의 layout_height를 200dp로 설정하였다.
+			dp란 유니티에서 비율과 같은 것 같다. 모든 디바이스에서 동일하게 보여지도록 하는 것.
+		match_parent :  실습에서 layout_width를 match_parent로 하니 화면이 꽉 찼다. 사이즈를 부모랑 동일하게 해주는 녀석인듯.
+		layout_weight : 디폴트는 1이라고 되어있다. 이 녀석을 지우고 엔터를 입력하니 높이가 입력한 대로 맞추어졌다.
+
+		textView 컴포넌트의 설정을 다루고 있다.
+		textView에서 글자에 대한 속성을 수정할 때, 오른쪽의 검색 창에서 size, color, gravity 등을 검색하여 수정하면 된다.
+
+	팔레트에서 Text를 선택하면 E-mail, password 등등 많이 등장하는데 차이는 E-mail을 선택하면 키보드를 입력하는 형식이
+	@를 포함하는 등 이메일의 형식으로 바뀐다. password도 같은 맥락
+	그리고 이런 텍스트 필드에 hint라는 것을 넣을 수 있는데, 이는 아무것도 입력되어있지 않은 창에서 보여지는 텍스트를 의미한다.
+	
+	화면전환 : xml 페이지 제작 -> 관련 자바 클래스 생성 (intent)-> 매니페스트 등록
+	Intent를 사용할 경우 flag도 고려하자. 현재까지 사용한 플래그는 Intent.FLAG_ACTIVITY_CLEAR_TOP이 있다.
+
+프로그램
+
+	회원가입 페이지를 다 만들었다고 해서 프로그램을 실행시키면 그 페이지를 볼 수 있는 것이 아니다.
+	일단 회원가입 페이지를 참조하는 자바 파일이 없고, manifest 설정이 처음부터 회원가입 페이지를 띄우는 것이 아니라 activity_main
+	페이지를 띄우도록 설정이 되어있기 때문이다.
+	따라서 앱 실행과 동시에 회원가입 페이지를 보고싶으면 manifest 파일에서 회원가입 페이지를 참조하는 자바 클래스를 실행하도록
+	변경해주어야 한다.
+		ㄴ 이 변경법은 메인페이지에서 뒤로가기를 누르면 다시 로그인을 해야하는 상황을 초래한다.
+		따라서 첫 페이지는 메인 액티비티로 설정하되 매핑되는 자바 클래스 코드에서 조건문을 걸어주도록 한다.
+		예를 들어 currentUser가 null이라면 로그인이 되지 않았을 경우이니 로그인 창을 띄우는 등의 방식으로 설정한다.
+
+manifest : 
+
+	설정파일? 인 것 같다.
+	수정 내역 : 
+		첫번째로 실행될 자바 클래스를 여기서 지정하였다.
+		internet을 사용하기 위해 android internet permission을 추가하였다.
+		
+
+백엔드 : 
+
+	findViewById(R.id.RegisterButton).setOnClickListener(onClickListener);
+	 // EditText로 형 변환해준 이유는 일반 View는 getText 메서드를 사용할 수 없어서이다.
+        	String email = ((EditText)findViewById(R.id.EmailEditText)).getText().toString();
+	위 코드들을 주목하자. R은 최초의 화면같은 느낌인가? view인건 맞는 것 같은데 
+	findViewById가 아니라 View binding을 사용하는 것이 더 안정적이라고 한다.
+	사진의 저장 같은 경우 URL의 형태로 저장이 되고, 이를 데이터베이스에 저장하는 식으로 이루어진다.
+
+의문들 : 
+
+	카메라를 사용하려면 android.support.v 시리즈가 있어야 하나?? gradle로는 안되나?
+	카메라 사용에 불편함이 많다. 공식 문서에서 알려주는 방법들 모두 현재 버전에서는 사용할 수 없다.
+	ActivityResultLauncher를 이용해서 문서의 내용을 따라할 수 있을까?

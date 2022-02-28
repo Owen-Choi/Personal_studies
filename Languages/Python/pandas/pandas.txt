@@ -1,0 +1,67 @@
+pandas에서 각 column은 series이고 data frame은 시리즈들의 결합체라고 생각하면 된다.
+
+	의문점  : 왜 파이참에서는 import pandas as pd, s1 = pd.core.~~ 가 안될까?
+
+데이터프레임
+
+	의문점 : 데이터프레임을 파이썬의 자료구조로 만들때, 
+		자료구조에 따라 pd.Dataframe.from_records, from_items, from_dict, 또는 사용하지 않는 등의
+		차이점이 있는데, 기준을 잘 모르겠다.
+		
+
+외부 파일 불러오기.
+
+df = pd.read_excel('C:/Users/oldst/Desktop/test.xlsx')
+print(df)
+	여기서 중요한건 중간중간 경로에 \가 아니라 /가 들어가야 정상동작한다.
+	그리고 데이터의 구성만 같다면 텍스트파일을 넣어도 같은 결과가 출력되게 된다.
+	또한 컴마가 아닌 탭 등으로 구분된 경우라면, 자바의 StringTokenizer와 같이 구분자를 parameter로 넘겨준다.
+		ex : df = pd.read_csv('data/friend_list_tab.txt', delimiter = '\t')
+	또한 만약 header, 즉 col의 이름을 알려주는 항목이 없다면 마찬가지로 parameter를 넘겨준다.
+		ex : df = pd.read_csv('data/friend_list_no_head.csv', header = None)
+		여기서 header까지 지정해주고 싶다면 뒤에 names = ['name', 'age', 'job'] 이라고 지정해주면 된다.
+
+외부 파일로 저장.
+
+	df.to_csv('test.csv', index = False, header = False, na_rep = '-')
+		이 코드의 의미는 test.csv에 df 데이터 프레임을 저장하되, index와 header (가장 위와 가장 왼쪽)는 제외하고 빈칸은 '-'로 처리함을
+		의미한다.
+
+데이터 출력
+	
+	df[0,3] : 0번째부터 2번째 인덱스까지 데이터를 출력
+	
+		특정 행에 대해서 모든 열 조회 : 
+			df.loc[3] : 4번째 인덱스( index 기준 3행)의 모든 열을 출력한다.
+			df.loc[[0,2]] : 0번째와 2번째 행에 대해서 모든 열을 출력한다.
+
+	콤마(,)는 별개의 결과를 따로따로 출력하는 것.
+	슬라이싱(콜론 : )은 표시된 숫자의 앞까지 결과를 모두 출력한다.
+
+		특정 열과 특정 행에 대해서 데이터 조회: 
+			df.iloc[0,2] : 0번째 행 2번째 열에 있는 값을 출력한다.
+			df.iloc[:5,:5] : 행과 열을 각각 5개씩 출력한다.
+			df.iloc[0, :3] : 0번째 행에 대해서 0,1,2번 열을 출력한다.
+			df.iloc[::2, :] : 전체 행에 대해서 짝수(2번째) 행에 대해서, 전체 열을 출력한다.
+			df.iloc[:,5:7] : 전체 행에 대해서 5,6번 인덱스의 열을 출력한다.
+ 
+데이터 값으로 필터링
+
+	df_filtered = df[df.age > 25]
+		or
+	df_filtered = df.query('age>25')
+
+열 이름으로 필터링(특정 열만 추출)
+	filter : 열을 추출한다.
+		df.filter(items=['age', 'job']) : 열 이름이 age, job인 열을 출력한다.
+		df.filter(like='수') : 열 이름에 '수'가 들어간 열을 출력한다.
+
+데이터 삭제
+
+	행 삭제
+		df.drop(['John', 'Nate']) : 이름이 John과 Nate인 행 전체를 삭제한다.
+			parameter로 inplace = True가 들어가면 삭제된채로 데이터프레임이 유지된다.
+			다른 방법으로는 df = df.drop(...)이 있다.
+
+	행 index로 삭제
+		df.drop(df.index[[0,2]]) : 0번, 2번 index인 행을 삭제한다.

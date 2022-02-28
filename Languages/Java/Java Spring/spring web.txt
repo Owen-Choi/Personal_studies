@@ -1,0 +1,113 @@
+스프링 웹 개발 
+
+	정적 컨텐츠
+	MVC와 템플릿 엔진
+	API 
+	3가지로 구분된다.
+	
+	정적 컨텐츠란 서버에서 파일을 웹 브라우저에 그대로 내려주는 방식이다. (hello-static.html 예제)
+	MVC와 템플릿 엔진이란 서버에서 html을 동적으로 바꿔서 내리는 방식이며, 이것이 템플릿 엔진이다.(hello controller 예제)
+		그렇게 하기 위해서 컨트롤러, 모델, 템플릿 엔진 화면을 사용하며 그런 것들을 model view control 이라고 해서 MVC라 부른다.
+		현재 가장 많이 쓰이는 방식이다.
+	API란 XML, JSON 이라는 데이터 구조 포맷으로 클라이언트에게 데이터를 전달하는 것과 같은 방식이다.
+		또 서버끼리는 html을 내릴 필요가 없이 데이터만 넘기면 되므로 API 방식을 이용한다.
+
+
+정적 컨텐츠 hello-static.html 페이지가 띄워지는 과정 :
+
+	웹 브라우저에서 localhost:8080/hello-static.html 주소 요청이 들어오면 내장 톰켓 서버가 먼저 
+	hello-static 관련 컨트롤러가 있는지 체크한다.(hello-static 어노테이션이 있는지)
+	만약 없다면 resources 하위에서 hello-static 이름을 가지는 파일이 있는지 탐색한다. 
+	핵심은 컨트롤러가 먼저라는 것 이해하기.
+
+
+MVC
+	html 페이지를 만들어놓고 controller에서 제어하는 방식.
+	Model, View, Controll의 약자이다.
+	어노테이션 @ 을 사용하여 어떤 페이지에 대해 컨트롤할 지 지정하며 코드 내에서 데이터에 접근하고,
+	페이지의 이름을 반환하면 view resolver가 해당 페이지를 찾아서 값을 대입해준다.
+	스프링 resources 폴더 하위의 templates에 존재하는 html 파일들이 동작한다.
+
+API
+
+	@ResponseBody 어노테이션을 통해 데이터 자체를 다룰 것이라고 알린다.
+	일반 문자열의 경우 html에서 바로 문자열로 띄우지만, 객체를 넘기는 경우에는 Spring에서 자체적으로 JSON으로 
+	변환해주는 과정을 거친 뒤 JSON의 형식으로 데이터가 전달된다.
+	여기서 기본 문자처리(string 처리)는 StringHttpMessageConverter라는 녀석이 해주고,
+	기본 객체처리는 MappingJackson2HttpMessageConverter 라는 녀석이 해준다.
+	Jackson같은 경우는 Json을 공부하면서 접한 적이 있다. parser의 일종이라고 알고있음.
+	참고로 XML과 같은 형식이 필요한 경우에는 요청에 따라 라이브러리를 등록해서 XML의 형식으로도 반환할 수 있다고 함.
+	
+
+일반적인 웹 어플리케이션 계층 구조
+	컨트롤러, 서비스, 리포지토리, 도메인으로 나뉜다.
+	컨트롤러는 웹 MVC의 컨트롤러 역할을 수행하고,
+	서비스에서는 핵심 비즈니스 로직을 구현하며
+	리포지토리에서는 데이터베이스에 접근, 도메인 객체를 DB에 저장하고 관리한다.
+	도메인에서는 비즈니스 도메인 객체, 예를 들면 회원,주문, 쿠폰 등을 데이터베이스에 저장하고 관리한다.
+	즉 MemberService 클래스의 기능을 구현하기 위해서는 MemberRepository가 필요한 식이다.
+	그리고 그럴때 @Service, @Repository, @Autowired 등을 사용한다.
+		ㄴ 이것이 스프링빈을 등록하는 2가지 방법 중 "컴포넌트 스캔과 자동 의존관계 설정" 방법
+
+강의에서는 데이터 저장소가 아직 지정되지 않아서 memory에 먼저 저장을 하고있는 가상의 시나리오를 가정한다.
+
+의존성 주입(Dependency Injection) : 
+
+	필드 주입, 생성자 주입, setter 주입이 있다.
+	생성자 주입같은 경우는,
+		@Autowired
+		public MemberController(MemberService memberService) { 
+			this.memberService = memberService
+		}
+		와 같이 생성자를 통해서 의존성을 주입하는 것이다.
+	필드 주입같은 경우는,
+		@Autowired private MemberService memberService; 
+		와 같이 필드에서 직접 의존성을 주입하는 것이다.
+		별로 좋은 방법은 아니라고 한다.
+	setter 주입같은 경우는, 
+		@Autowired
+		public void setMemberService(MemberService memberService) {
+			this.memberService = memberService;
+		}
+		와 같이 생성자 주입과 비슷한 양상을 띄는데, setter에서 의존성을 주입하는 것이다.
+		단점으로는 setter주입을 하기 위해서는 setter가 public 으로 노출이 되어있어야 하는데 
+		setter를 중간에 바꿀 일이 거의 없다고 하지만 public으로 노출됨으로써 바뀔 수 있고
+		이로 인해 문제가 생길 수도 있다고 한다.
+
+	
+	결론은, 의존관계가 실행중에 동적으로 변하는 경우는 아예 없다고 하니 생성자 주입이 강력히 추천된다고 한다.
+
+스프링빈 등록하는 2가지 방법 : 
+
+	일단 스프링빈이 뭐지?앞에서 말한 스프링 컨테이너에 들어있는 객체가 스프링 빈인가?
+	1. 컴포넌트 스캔과 자동 의존관계 설정
+	2. 자바 코드로 직접 스프링 빈 등록하기
+
+		1번 방법에서 컴포넌트 애노테이션(@Component)이 있으면 스프링 빈이 자동 등록된다고 한다.
+		또한 컴포넌트 애노테이션을 포함하는 애노테이션들(@Controller, @Service, @Repository)이 있어도 빈이 등록된다.
+		그렇다면 아무 패키지나 만들어서 하위 클래스에 애노테이션을 추가하면 스프링 빈으로 등록이 될까?
+		프로그램이 실행되는 패키지와 동일하거나 그보다 상위의 패키지에서는 스프링 빈 등록이 안된다고 한다.
+
+		2번 방법은 (프로그램이 실행되는 패키지 하위에?) 클래스를 하나 만들고 @Configuration 애노테이션을 붙인 
+		클래스를 만든다. 그리고 스프링 빈으로 만들 클래스들을 @Bean 애노테이션으로 명시해준다.
+
+	코드 : 
+
+		@Configuration
+		public class SpringConfig {
+		
+			@Bean
+			public MemberService memberService() { 
+				return new MemberService(memberRepository());
+			}
+			
+			@Bean
+			public MemberRepository memberRepository() { 
+				return new MemoryMemberRepository();
+			}
+		}
+		컨트롤러 같은 경우에는 1번의 방법을 사용한다. 즉 @Controller로 컴포넌트 스캔 및 @Autowired로 등록한다.
+		이 부분은 어쩔 수 없다고 한다. 
+
+	편한건 확실히 1번 방법이 편하지만, 2가지 방법 모두 장단점이 있다고 한다.
+	
