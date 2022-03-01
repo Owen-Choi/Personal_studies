@@ -59,9 +59,25 @@ print(df)
 데이터 삭제
 
 	행 삭제
-		df.drop(['John', 'Nate']) : 이름이 John과 Nate인 행 전체를 삭제한다.
+		df.drop(['John', 'Nate']) : 이름이 John과 Nate인 행 전체를 삭제한다. (index가 숫자가 아닌 이름이다.)
 			parameter로 inplace = True가 들어가면 삭제된채로 데이터프레임이 유지된다.
 			다른 방법으로는 df = df.drop(...)이 있다.
 
 	행 index로 삭제
 		df.drop(df.index[[0,2]]) : 0번, 2번 index인 행을 삭제한다.
+
+	열 삭제
+		df = df.drop('age', axis=1) : axis=1 매개변수로 열 방향임을 파악하고, 그 열 방향에서 이름이 age인 항목을 삭제한다.
+			즉 age라는 이름의 열을 삭제한다.
+
+데이터 추가
+
+	열 추가/열 업데이트
+		df['salary'] = 0 : salary라는 이름의 열을 추가하고 값은 0으로 지정한다.
+
+	기존 데이터를 활용하여 새로운 열 추가
+		import numpy as np
+		df['salary'] = np.where(df['job'] != 'student', 'yes', 'no') : job열이 student가 아니면 새로 추가한 salary열에 yes를,
+								student라면 새로 추가한 salary열에 no를 입력한다.
+
+		df['total'] = df['midterm'] + df['final'] : midterm 열과 final 열의 값을 더해서 total에 저장한다.
