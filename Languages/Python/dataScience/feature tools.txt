@@ -1,0 +1,29 @@
+es = ft.EntitySet(id = 'clients')
+	==> id가 clients인 EntitySet을 만든다. (Entity : dataframe or table, EntitySet : RDB, set of entites)
+
+es = es.entity_from_dataframe(entity_id = 'clients', dataframe = clients, index = 'client_id', time_index ='joined')
+	==> dataframe으로부터 entity를 만든다. index는 검색을 위해 지정하고, time_index는 모르겠다.
+
+es = es.entity_from_dataframe(entity_id = 'payments', dataframe = payments,variable_types = {'missed':ft.variable_types.Categorical},
+make_index = True, index = 'payment_id')
+	==> 이렇게 EntitySet으로 선언된 객체에 추가로 다른 id와 인덱스를 가진 entity를 추가할 수 있다.
+그 뒤에 es['payments']와 같이 array처럼 접근하면 된다.
+
+###################################################################################################
+
+RDB처럼 entity들 간에 관계(relationship)가 생길 수 있는데, 다음과 같이 설정해줄 수 있다.
+
+r_client_previous = ft.Relationship(es['clients']['client_id'], es['loans']['client_id'])
+es = es.add_relationship(r_client_previous)
+
+	client_id가 foreign key 같은 느낌이다. 관계를 출력해보면 loans.client_id -> clients.client_id 이렇게 표시된다.
+
+
+###################################################################################################
+
+features, feature_names = ft.dfs(entityset = es, target_entity = 'clients',
+                                 agg_primitives = ['min', 'mean', 'max', 'percent_true', 'last'],
+                                 trans_primitives = ['year', 'month'])
+
+	id가 clients인 엔티티에 대해 agg_primitives로 전달된 연산과 trans_primitives로 전달된 연산을 수행하여 features에 저장한다.
+

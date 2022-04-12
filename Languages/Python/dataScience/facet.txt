@@ -1,0 +1,5 @@
+FacetGrid :
+	FacetGrid( " 데이터 프레임", "기준이 될 column", "column의 순서" )
+
+	ex : graph = sns.FacetGrid(data, col='BMI', col_order=[0,1,2,3,4])
+

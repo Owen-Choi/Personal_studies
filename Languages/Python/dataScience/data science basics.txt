@@ -1,0 +1,75 @@
+빅데이터와 데이터과학의 차이점
+	빅데이터 : 비즈니스 특화
+	데이터과학 : 머신러닝 특화
+##########################################################################################
+빅데이터 엔드 투 엔드 과정
+데이터 전처리
+	Data restructuring
+		Table decomposition
+		Table merge
+	Data value Changes
+		Cleaning dirty data : dirty data를 여러가지 방법으로 없애기
+		Text preprocessing : html 헤더 제거, 마침표나 느낌표 같은 구두점 처리 등
+		Data discretization : 남자/여자, 20대/30대 등과 같이 경계를 나누고 여러개의 bin으로 나눔
+		Data normalization / standardization
+		Encoding for data mining algorithms
+	Feature Engineering
+		feature creation
+		feature selection
+		feature reduction
+			Principal Component Analysis
+		특정 결과 산출하는데 필요없는 값들 drop
+		중요하지 않은 feature 없애기, 새로운 feature 만들기
+			기존 feature로부터 새로운 feature만들기 : 
+				incoome 값이 104564 라면 log해서 11.557555로 바꾸기(수가 작아지면 더 빨라진다.)
+				날짜도 월만 필요하다면 월만 쓴다.
+		LabelEncoder, OnehotEncoder ... 
+	Data reduction
+		Feature Selection/Reduction
+		Data Filtering
+		Data Summarization
+		Concept Hierarchy
+		Data Compression
+		Nemerosity Reduction
+##########################################################################################
+feature selection과 feature reduction의 차이 : 둘 다 feature의 수를 감소시키지만 
+feature selection의 경우 feature를 변경하지 않고 선택해서 감소시키는 거라면 feature reduction은 feature의 형태를 바꾼다.
+##########################################################################################	
+
+데이터 전처리의 missing value 처리 : 
+	isna
+	na_values
+	replace
+	dropna(any, all, thresh)
+	fillna
+##########################################################################################
+dirty data의 종류(와 발생 이유? 대처법? 너무 많은데)
+	missing data
+		(empty blank)
+	wrong data
+		height : 248
+	unusable data
+		dollar, $, 김대중, DJ ... 
+	outliers
+		outlier = value > mean ± 3 standard deviations
+
+##########################################################################################
+정규화를 왜 하는가?
+	머신러닝 알고리즘은 데이터가 서로 유사한 규모이거나 정규 분포에 가까울 때 더 나은 성능을 발휘한다고 한다.
+	민맥스, 스탠다드 ,로버스트 등 많은 스케일러들도 결국 이 작업을 위한 것들.
+##########################################################################################
+feature engineering의 feature selection은 왜 하는가?
+	원하는 결과를 도출하는 feature만 남기고 나머지는 drop하는게 머신러닝 알고리즘의 성능을 향상시킬 수 있기 때문이다.
+	여기에서 Univaiate selection(select K best(chi-square))과 feature importance scoring, correlation matrix with heatmap 이 사용된다.
+##########################################################################################
+feature reduction에서의 PCA
+	PCA : Principal Component Analysis
+	PC : eigenvector(아이겐 벡터, 주어진 데이터의 분포에 분산이 가장 큰 방향을 뜻한다.)
+		지방, 단백질이랑 섬유질, 비타민C같이 correlated 된 component는 서로 묶어서 PC로 만들 수 있다.
+	
+		from sklearn.decomposition import PCA
+		pca = PCA(n_components=2)
+		principalComponents = pca.fit_transform(x)
+		
+		위 코드를 통하면 x의 feature는 판단된 correlation에 따라 2개(n_components)의 새로운 PC로 새롭게 만들어진다.
+		최적의 n_components의 수는 elbow가 판단한다.
