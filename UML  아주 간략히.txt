@@ -1,0 +1,11 @@
+class diagram : 세탁기 예제, 그냥 ER diagram이랑 비슷한 거
+
+use case diagram : 사람 모양 있는 다이어그램, 잠재 사용자가 자신의 관점에서 시스템을 이해하는데 좋다.
+
+state diagram : starting point 부터 end point 까지 state의 변화를 중점으로 나타낸 diagram
+
+sequence diagram : 클래스(오브젝트) 간의 상호작용을 보여주는 데 중점을 둔 다이어그램
+		swim lain이랑 비슷한데, 아닌거 그거 ㅇㅇ
+
+activity diagram : swim lein 있었던 그거. 행위 중점의 다이어그램
+	

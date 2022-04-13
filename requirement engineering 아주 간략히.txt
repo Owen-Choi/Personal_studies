@@ -1,0 +1,24 @@
+간단하게 생각하자, functional은 정말 말 그대로 시스템이 제공해야 하는 기능에 대한 요구들이고, non-functional 서비스나 시스템에서의 제약조건을 의미한다.
+ 
+요구공학은 
+	requirement elicitation
+		requirement discovery
+			interview
+			ethnography
+	requirement specification (user-requirement, system-requirement)
+		natural language specification
+		structured specification
+		use case
+		software requirements document
+	requirement validation
+		requirement checking
+			validity : 시스템이 고객의 요구를 최선으로 제공하고 있는가
+			consistency : 다른 요구사항과 충돌하지는 않는가
+			completeness : 고객이 요구한 것이 모두 포함되었는가
+			realism : 주어진 기술과 예산으로 구현이 가능한가
+			verifiability : 요구가 검증될 수 있는가
+		requirement reviews
+		prototyping
+		test-case generation
+	requirement change
+의 과정으로 이루어진다.

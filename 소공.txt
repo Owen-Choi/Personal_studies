@@ -19,16 +19,22 @@ incremental development와 delivery의 절차와 이를 사용했을 때의 이�
 	customer collaboration over contract negotiation
 	responding to change over following a plan
 XP에서 중요한 특징 3-4가지와 각각에 대한 설명
-	user stories for specification : ~
-	refactoring : ~
-	test-driven development : ~
-	pair programming : ~
+	user stories for specification : 사용자의 요구사항은 스토리나 시나리오의 형태로 표현된다.
+	refactoring : 만약 코드가 더 향상될 수 있다면 즉시 수정에 들어간다.
+	test-driven development : 테스트를 먼저 함으로서 요구사항을 더 효과적으로 충족할 수 있다.
+	pair programming : 두명이서 하나의 컴퓨터를 두고 코딩한다.
 Mentcare 시스템에서 non-functional한 요구사항들
 	product requirement, organizational requirement, external requirement 의 예시 들기
+	간단하게 생각하자, functional은 정말 말 그대로 시스템이 제공해야 하는 기능에 대한 요구들이고, non-functional은
+	서비스나 시스템에서의 제약조건을 의미한다. 
 요구공학에서 user requirements와 system requirements 간의 차이를 만드는 것이 중요한 이유
 	두개 간의 근본적인 차이가 있다. 유저 요구의 경우 유저의 관점에서 시스템의 기능과 특징을 설명하는 것이 목적이다.
 	시스템 요구의 경우 유저 요구보다 더 정교하고 정확한 시스템에 대한 구체화가 요구됨
+		(uer requirement : natural language and diagram. written for customers
+		  system requirement : a structured document defines what should be implemented)
 주어진 시스템들이 어떤 소프트웨어 프로세스 모델을 사용하는 것이 좋은지 이유와 함께 설명
 	
 주어진 요구사항이 functional한 요구사항인지 non-functional한 요구사항인지 판단
 sequence diagram 그리기
+
++ SE tool이 뭐하는 녀석인가?
