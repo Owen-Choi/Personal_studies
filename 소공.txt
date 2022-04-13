@@ -1,0 +1,34 @@
+소프트웨어 엔지니어링이 뭐냐
+	Software engineering is an engineering discipline which is concerned with all aspects of software production
+소프트웨어 프로세스의 4가지 기본적인 활동이 뭐냐
+	software specification, software design and implementation, software validation, software evolution
+system context와 interaction model을 어떻게 이해했냐?
+	이건 그냥 외우자?
+incremental development와 delivery의 절차와 이를 사용했을 때의 이점을 설명해라
+	그림. 블로그에서 봤지만 specification과 development, validation이 각 단계? 마다 분리되지 않고 동시에 진행이 된다.
+	advantages : 
+		the cost of accommodating changes to customer requirements is reduced (변화 수용 비용 감소)
+		it is easier to get customer feedback on development work that has been done (개발이 완료된 부분에 대해 고객에게 피드백을 받기가 쉽다.)
+		more rapid delivery and deployment of useful software to the customer is possible (더 빠른 배포와 전달이 가능하다)
+변화에 대응해서, rework의 비용을 줄일 수 있는 2가지 방법을 설명해라
+	Change anticipation : 변화 예상, 고객들한테 프로토타입 넘기기
+	Change tolerance : 변화 허용, 당황하지 않고 다음 increment에서 수용
+에자일 방법론의 원리가 어떻게 소프트웨어 개발을 가속화시키는지 설명해라
+	individual and interactions over processes and tools
+	working software over comprehensive documentation
+	customer collaboration over contract negotiation
+	responding to change over following a plan
+XP에서 중요한 특징 3-4가지와 각각에 대한 설명
+	user stories for specification : ~
+	refactoring : ~
+	test-driven development : ~
+	pair programming : ~
+Mentcare 시스템에서 non-functional한 요구사항들
+	product requirement, organizational requirement, external requirement 의 예시 들기
+요구공학에서 user requirements와 system requirements 간의 차이를 만드는 것이 중요한 이유
+	두개 간의 근본적인 차이가 있다. 유저 요구의 경우 유저의 관점에서 시스템의 기능과 특징을 설명하는 것이 목적이다.
+	시스템 요구의 경우 유저 요구보다 더 정교하고 정확한 시스템에 대한 구체화가 요구됨
+주어진 시스템들이 어떤 소프트웨어 프로세스 모델을 사용하는 것이 좋은지 이유와 함께 설명
+	
+주어진 요구사항이 functional한 요구사항인지 non-functional한 요구사항인지 판단
+sequence diagram 그리기
