@@ -2,22 +2,48 @@
 	빅데이터 : 비즈니스 특화
 	데이터과학 : 머신러닝 특화
 ##########################################################################################
+
+빅데이터란?
+	process and techniques to discover from data answers or insights to solve a business problem
+
 빅데이터 엔드 투 엔드 과정
-데이터 전처리
+	Objective setting
+	Data Inspection
+		Data exploration
+		Suitability check
+			process metadata, business metadata, technical metadata (참고만)
+	Data preprocessing
+	Data analysis (modeling)
+	Evaluation of the results
+	(deployment)
+Data Preprocessing
 	Data restructuring
 		Table decomposition
 		Table merge
 	Data value Changes
 		Cleaning dirty data : dirty data를 여러가지 방법으로 없애기
+			missing data
+			wrong data
+			unusable data
+			outliers
 		Text preprocessing : html 헤더 제거, 마침표나 느낌표 같은 구두점 처리 등
 		Data discretization : 남자/여자, 20대/30대 등과 같이 경계를 나누고 여러개의 bin으로 나눔
 		Data normalization / standardization
+			data scaling : std(z-score), min-max, robust (얘네 다 계산할 수 있어야 함.)
 		Encoding for data mining algorithms
 	Feature Engineering
 		feature creation
+			deriving feature from existing features
+				entity, agg, ...
+			converting values to new features
+				encoders (label, one-hot)
 		feature selection
+			Univariate Selection(SelectKBest)
+			Feature importance scoring
+			correlation matrix with heatmap
 		feature reduction
 			Principal Component Analysis
+			Eigenvector(pc) : directions where there is the most variance
 		특정 결과 산출하는데 필요없는 값들 drop
 		중요하지 않은 feature 없애기, 새로운 feature 만들기
 			기존 feature로부터 새로운 feature만들기 : 
@@ -37,11 +63,16 @@ feature selection의 경우 feature를 변경하지 않고 선택해서 감소�
 ##########################################################################################	
 
 데이터 전처리의 missing value 처리 : 
-	isna
+	isna()(.any(), .sum())
 	na_values
+		missing_values = ["?", "--"]
+		df_test = pd.read_csv("dataset.csv", na_values = missing values)	# ?, -- 를 NA로 치환한다.
 	replace
 	dropna(any, all, thresh)
+		df.dropna(axis=0, how='all', inplace=True)
+		how의 default는 'any'이다. all의 경우 row의 모든 value가 na여야 drop한다.
 	fillna
+		fillna(25) : na값을 25로 채운다.
 ##########################################################################################
 dirty data의 종류(와 발생 이유? 대처법? 너무 많은데)
 	missing data
@@ -56,11 +87,12 @@ dirty data의 종류(와 발생 이유? 대처법? 너무 많은데)
 ##########################################################################################
 정규화를 왜 하는가?
 	머신러닝 알고리즘은 데이터가 서로 유사한 규모이거나 정규 분포에 가까울 때 더 나은 성능을 발휘한다고 한다.
+	또 평균값 등이 skewed 에서는 대표값으로 다뤄질 수 없지만 정규화된 form에서는 다뤄질 수 있다.
 	민맥스, 스탠다드 ,로버스트 등 많은 스케일러들도 결국 이 작업을 위한 것들.
 ##########################################################################################
 feature engineering의 feature selection은 왜 하는가?
 	원하는 결과를 도출하는 feature만 남기고 나머지는 drop하는게 머신러닝 알고리즘의 성능을 향상시킬 수 있기 때문이다.
-	여기에서 Univaiate selection(select K best(chi-square))과 feature importance scoring, correlation matrix with heatmap 이 사용된다.
+	여기에서 Univaiate selection(select K best(chi-square))과 feature importance scoring(Extra tree classifier), correlation matrix with heatmap 이 사용된다.
 ##########################################################################################
 feature reduction에서의 PCA
 	PCA : Principal Component Analysis
