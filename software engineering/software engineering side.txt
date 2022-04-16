@@ -1,0 +1,49 @@
+Issues of professional responsibilty
+
+	Confidentiality (기밀성, 비밀유지)
+	Competence (능숙함, 능력)
+	Intellectual property rights
+	computer misuse
+
+wather information system에 포함될 시스템들
+
+	weather station system
+	weather station maintenence system
+	data management and archiving system
+
+소프트웨어 프로세스 모델들
+	water-fall model (plan-driven)
+		변화를 수용하기 어려움. 규모가 크고 체제가 갖춰진 대규모의 그룹에서 사용
+	incremental development (plan-driven or agile)
+		장점은 잘 알테니 단점 : 
+			시스템이 빠르게 개발되면 문서를 매번 만드는 게 비효율적. 따라서 프로세스가 visible하지 않다
+			새로운 increment가 추가될 때마다 시스템 구조는 점점 degrade된다.
+	reuse-oriented (plan-drive or agile)
+	agile development process
+
+요구공학이란?
+	
+	사용자가 시스템으로부터 요구하는 서비스나 제약사항들을 구현하는 서비스이다.
+	다음과 같은 과정으로 이루어진다.
+
+		requirements elicitation : 요구사항을 인터뷰, Ethnography 등을 통해서 긁어모으는 단계
+		requirements specification : 요구사항을 문서화하고 구체화시키는 단계
+			user requirements
+			system requirements
+		requirements validation : 요구사항이 고객이 진짜 원하는 것인지 확인한다.
+			requirement checking
+				validity
+				consistency
+				completeness
+				realism
+				verifiability
+			requirement reviews
+				verifiabilty
+				comprehensibility
+				traceablity
+				adaptability
+		requirements change
+IEEE : Institute of Electrical and Electronic Engineers 
+	설마 이걸 내겠어 싶지만 뭐 봐두면 나쁘진 않지.
+
+	
