@@ -1,5 +1,6 @@
 소프트웨어 엔지니어링이 뭐냐
 	Software engineering is an engineering discipline which is concerned with all aspects of software production
+	소프트웨어 공학이란 소프트웨어 프로덕션과 관련있는 공학 규율? 이다.
 소프트웨어 프로세스의 4가지 기본적인 활동이 뭐냐
 	software specification, software design and implementation, software validation, software evolution
 system context와 interaction model을 어떻게 이해했냐?

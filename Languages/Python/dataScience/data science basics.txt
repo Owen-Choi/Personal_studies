@@ -13,6 +13,10 @@
 		Suitability check
 			process metadata, business metadata, technical metadata (참고만)
 	Data preprocessing
+		Data restructuring
+		Data value Changes
+		Feature Engineering
+		Data reduction
 	Data analysis (modeling)
 	Evaluation of the results
 	(deployment)
@@ -56,7 +60,17 @@ Data Preprocessing
 		Data Summarization
 		Concept Hierarchy
 		Data Compression
+			loss-less
+			lossy
 		Nemerosity Reduction
+			parametric
+			non-parametric(clustering)
+				discretization
+					equal width bins
+					equal frequency bins
+					entropy based
+				clustering
+				sampling
 ##########################################################################################
 feature selection과 feature reduction의 차이 : 둘 다 feature의 수를 감소시키지만 
 feature selection의 경우 feature를 변경하지 않고 선택해서 감소시키는 거라면 feature reduction은 feature의 형태를 바꾼다.
@@ -87,7 +101,7 @@ dirty data의 종류(와 발생 이유? 대처법? 너무 많은데)
 ##########################################################################################
 정규화를 왜 하는가?
 	머신러닝 알고리즘은 데이터가 서로 유사한 규모이거나 정규 분포에 가까울 때 더 나은 성능을 발휘한다고 한다.
-	또 평균값 등이 skewed 에서는 대표값으로 다뤄질 수 없지만 정규화된 form에서는 다뤄질 수 있다.
+	또 평균값 등이 skewed 형태에서는 대표값으로 다뤄질 수 없지만 정규화된 form에서는 다뤄질 수 있다.
 	민맥스, 스탠다드 ,로버스트 등 많은 스케일러들도 결국 이 작업을 위한 것들.
 ##########################################################################################
 feature engineering의 feature selection은 왜 하는가?

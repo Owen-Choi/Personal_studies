@@ -1,0 +1,41 @@
+ch04-1 intent 
+	
+	Intent intent = new Intent (action, data);
+	startActivity(intent);		// startActivity : no result, startActivityForResult(results)
+	
+
+ch04-2 intent & bundle
+
+	=========================================
+	Activity1
+	
+	Intent myIntentA1A2 = new Intent (Activity1.this, Activity2.class);
+	
+	Bundle myBundle1 = new Bundle();
+	my Bundle1.putInt ("val1", 123)
+
+	myIntent A1A2.putExtras(myBundle1);
+	startActivityForResults(myIntentA1A2, 1122);
+
+	==========================================
+	Activity2
+
+	myBundle.putString("val1", 456);
+	mycallerIntent.putExtras(myBundle);
+	
+	setResult(Activity.RESULT_OK, mycallerIntent);
+
+
+
+optionMenu는 상단 바 같은 느낌, context menu는 메세지 길게 누르면 나오는 부가적인 선택창 같은 느낌
+
+	메뉴에 접근하는 방법은 다음과 같다.
+	onOptionsItemSelected 메서드를 override한다.
+
+	item(혹은 매개변수의 다른 이름).getItemId(); 를 이용해서 선택된 메뉴의 id를 받아온다.
+	그 뒤 switch case 문의 R.id.~~ 를 통해서 접근. 
+
+	중요할 지는 모르겠으나 super.onOptionsItemSelected(item);을 반환한다.
+
+추가적으로 onCreateOptionMenu() 메서드도 override 해야한다.
+	그리고 여기서 getMenuInflater().inflate(R.id.~~, menu(혹은 매개변수의 다른 이름))로 메뉴를 inflate해주도록 한다. 
