@@ -52,6 +52,7 @@ Data Preprocessing
 		feature reduction
 			Principal Component Analysis
 			Eigenvector(pc) : directions where there is the most variance
+			즉 PC로 correlation 정도 파악해서 묶어버림.
 		특정 결과 산출하는데 필요없는 값들 drop
 		중요하지 않은 feature 없애기, 새로운 feature 만들기
 			기존 feature로부터 새로운 feature만들기 : 
@@ -149,3 +150,8 @@ aggregation을 하는 이유 :
 	따라서 논리적으로 연결된 RDB같은 경우는 aggregation을 통해서 하나로 합쳐주어야 한다.
 
 module 4 preprocessing 2 시험 전에 잘 봐두자.
+
+###########################################################################################
+
+피어슨의 r 구하는 공식 알아두기.
+linear regression 기울기 절편 공식 알아두기. 설마 나오겠어 근데
