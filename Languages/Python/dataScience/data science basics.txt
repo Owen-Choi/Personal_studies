@@ -8,8 +8,10 @@
 
 빅데이터 엔드 투 엔드 과정
 	Objective setting
+	Data curation
 	Data Inspection
 		Data exploration
+			데이터의 특성(distribution, outliers, correlation), matplotlib의 여러 라이브러리들을 사용할 수 있다.
 		Suitability check
 			process metadata, business metadata, technical metadata (참고만)
 	Data preprocessing
@@ -43,6 +45,8 @@ Data Preprocessing
 				encoders (label, one-hot)
 		feature selection
 			Univariate Selection(SelectKBest)
+				selectKBest는 target entity를 산출하기 위해 각 indenpendent entity가 얼마나 중요한지를
+				score(fit.scores_)로 나타내어 확인할 수 있다.
 			Feature importance scoring
 			correlation matrix with heatmap
 		feature reduction
@@ -119,3 +123,29 @@ feature reduction에서의 PCA
 		
 		위 코드를 통하면 x의 feature는 판단된 correlation에 따라 2개(n_components)의 새로운 PC로 새롭게 만들어진다.
 		최적의 n_components의 수는 elbow가 판단한다.
+
+
+
+###########################################################################################
+
+np.random.randint(최소값, 최대값, size=(행, 열)) : 범위 내의 정수를 생성. 
+
+	ex : np.random.randint(0,4,size=(1,4))
+
+np.random.randn((행,열)) : 표준정규분포(-1 ~ 1)로부터 샘플링된 난수를 생성한다.
+	
+	ex : np.random.randn(5)
+
+np.random.normal(정규분포 범위, 정규분포 범위, (행,열)) : 정규분포로부터 샘플링된 난수를 생성한다.
+
+	ex : np.random.normal(1.5, 1.5, (2,4))
+
+
+###########################################################################################
+
+aggregation을 하는 이유 : 
+	
+	머신러닝 알고리즘은 두개 이상의 엔티티를 한번에 처리할 수 없다.
+	따라서 논리적으로 연결된 RDB같은 경우는 aggregation을 통해서 하나로 합쳐주어야 한다.
+
+module 4 preprocessing 2 시험 전에 잘 봐두자.
