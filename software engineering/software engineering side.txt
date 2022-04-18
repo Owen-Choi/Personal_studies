@@ -23,7 +23,9 @@ wather information system에 포함될 시스템들
 
 요구공학이란?
 	
-	사용자가 시스템으로부터 요구하는 서비스나 제약사항들을 구현하는 서비스이다.
+	사용자가 시스템으로부터 요구하는 서비스나 제약사항들을 구현하는 프로세스(절차)이다.
+	요구공학에는 공통적인 활동들이 존재한다.
+		requirement elicitatoin, requirement analysis, requirement validation, requirement management
 	다음과 같은 과정으로 이루어진다.
 
 		requirements elicitation : 요구사항을 인터뷰, Ethnography 등을 통해서 긁어모으는 단계
