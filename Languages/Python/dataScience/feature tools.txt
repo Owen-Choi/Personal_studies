@@ -2,7 +2,7 @@ es = ft.EntitySet(id = 'clients')
 	==> id가 clients인 EntitySet을 만든다. (Entity : dataframe or table, EntitySet : RDB, set of entites)
 
 es = es.entity_from_dataframe(entity_id = 'clients', dataframe = clients, index = 'client_id', time_index ='joined')
-	==> dataframe으로부터 entity를 만든다. index는 검색을 위해 지정하고, time_index는 모르겠다.
+	==> dataframe으로부터 entity를 만든다. index는 기준이 될 feature, 즉 외래키? 정도로 생각하면 된다. time_index는 모르겠다.
 
 es = es.entity_from_dataframe(entity_id = 'payments', dataframe = payments,variable_types = {'missed':ft.variable_types.Categorical},
 make_index = True, index = 'payment_id')

@@ -5,7 +5,7 @@ Issues of professional responsibilty
 	Intellectual property rights
 	computer misuse
 
-wather information system에 포함될 시스템들
+weather information system에 포함될 시스템들
 
 	weather station system
 	weather station maintenence system
@@ -30,8 +30,9 @@ wather information system에 포함될 시스템들
 
 		requirements elicitation : 요구사항을 인터뷰, Ethnography 등을 통해서 긁어모으는 단계
 		requirements specification : 요구사항을 문서화하고 구체화시키는 단계
-			user requirements
-			system requirements
+			Natural language specification
+			Structured specifications
+			use cases
 		requirements validation : 요구사항이 고객이 진짜 원하는 것인지 확인한다.
 			requirement checking
 				validity
@@ -49,3 +50,33 @@ IEEE : Institute of Electrical and Electronic Engineers
 	설마 이걸 내겠어 싶지만 뭐 봐두면 나쁘진 않지.
 
 	
+software evolution 과정
+	define system requirements
+	assess existing systems
+	propose system changes
+	modify systems
+
+prototype 과정
+	establish prototype objectives
+	define prototype functionality
+	develop prototype
+	evaluate prototype
+
+the problems of incremental delivery
+	there are common facilities in the systems, but in the incremental delivery,
+	it may hard to know this.
+
+generic software
+	the specification of what the software should do is owned by the developer
+customized software
+	the specification of what the software should do is owned by the custoemr
+
+coping with changing requirements
+	system prototyping
+	incremental delivery
+
+Essential attributes of good software
+	Acceptability
+	Dependability and security
+	efficiency
+	maintainability

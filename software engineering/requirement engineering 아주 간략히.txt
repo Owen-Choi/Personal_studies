@@ -22,3 +22,10 @@
 		test-case generation
 	requirement change
 의 과정으로 이루어진다.
+
+공통과정으로는 
+	requirement elicitation
+	requirement analysis
+	requirement validation
+	requirement management
+가 있다.

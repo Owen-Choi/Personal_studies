@@ -121,7 +121,7 @@ feature reduction에서의 PCA
 		from sklearn.decomposition import PCA
 		pca = PCA(n_components=2)
 		principalComponents = pca.fit_transform(x)
-		
+		(이렇게 하면 principalComponents 에는 무슨 값이 들어가는거지?)
 		위 코드를 통하면 x의 feature는 판단된 correlation에 따라 2개(n_components)의 새로운 PC로 새롭게 만들어진다.
 		최적의 n_components의 수는 elbow가 판단한다.
 
@@ -133,7 +133,7 @@ np.random.randint(최소값, 최대값, size=(행, 열)) : 범위 내의 정수�
 
 	ex : np.random.randint(0,4,size=(1,4))
 
-np.random.randn((행,열)) : 표준정규분포(-1 ~ 1)로부터 샘플링된 난수를 생성한다.
+np.random.randn((행,열)) : 표준정규분포(-1 ~ 1)로부터 샘플링된 난수를 생성한다. (정수로 쓰고싶으면 앞에 100을 곱해줘야함.)
 	
 	ex : np.random.randn(5)
 
