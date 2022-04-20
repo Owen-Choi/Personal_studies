@@ -69,7 +69,7 @@ the problems of incremental delivery
 generic software
 	the specification of what the software should do is owned by the developer
 customized software
-	the specification of what the software should do is owned by the custoemr
+	the specification of what the software should do is owned by the custoemer
 
 coping with changing requirements
 	system prototyping
@@ -80,3 +80,15 @@ Essential attributes of good software
 	Dependability and security
 	efficiency
 	maintainability
+
+web-based software's feature
+	software reuse
+	incremental and agile development
+	rich interfaces
+
+water fall phases
+	requirement analysis and definition
+	system and software design
+	implementation and unit test
+	integration and system testing
+	Operation and maintenance

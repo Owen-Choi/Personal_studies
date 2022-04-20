@@ -56,7 +56,7 @@ Data Preprocessing
 		특정 결과 산출하는데 필요없는 값들 drop
 		중요하지 않은 feature 없애기, 새로운 feature 만들기
 			기존 feature로부터 새로운 feature만들기 : 
-				incoome 값이 104564 라면 log해서 11.557555로 바꾸기(수가 작아지면 더 빨라진다.)
+				income 값이 104564 라면 log해서 11.557555로 바꾸기(수가 작아지면 더 빨라진다.)
 				날짜도 월만 필요하다면 월만 쓴다.
 		LabelEncoder, OnehotEncoder ... 
 	Data reduction
@@ -87,6 +87,7 @@ feature selection의 경우 feature를 변경하지 않고 선택해서 감소�
 		missing_values = ["?", "--"]
 		df_test = pd.read_csv("dataset.csv", na_values = missing values)	# ?, -- 를 NA로 치환한다.
 	replace
+		x.replace({"?" : np.nan, "--" : np.nan}, inplace = True)
 	dropna(any, all, thresh)
 		df.dropna(axis=0, how='all', inplace=True)
 		how의 default는 'any'이다. all의 경우 row의 모든 value가 na여야 drop한다.
@@ -155,3 +156,24 @@ module 4 preprocessing 2 시험 전에 잘 봐두자.
 
 피어슨의 r 구하는 공식 알아두기.
 linear regression 기울기 절편 공식 알아두기. 설마 나오겠어 근데
+
+
+dataframe 생성 : 기초중에 기초
+
+	data = { "2020" : [11111,22222,33333,44444,55555], 
+		"2021" : [66666,77777,88888,99999,00000] }
+	dataFrame = pd.DataFrame(data, index = [~~~])
+
+pca 돌리기 전에 스케일링 먼저,
+
+
+Correlation describes the strength of a linear relationship between two variables
+and Regression tells us how to draw the straight line described by the correlation
+
+
+
+metadata : data of data
+
+	technical metadata
+	business metadata
+	process metadata
