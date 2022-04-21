@@ -32,9 +32,6 @@ ch04-2 intent & bundle
 ImageView 크기에 image 사이즈 맞추는 코드 : 
 	android:scaleType="fitXY"
 
-헷갈릴 수도 있는 xml 코드 : 
-	android : layout_width(height) : 아주 기본적인 건데 헷갈릴 수 있음.
-			match_parent, wrap_content
 
 체크된 라디오 버튼의 아이디를 받아오는 함수 : 
 	int radioID = radioGroupInstance.getCheckedRadioButtonId();
@@ -55,3 +52,128 @@ optionMenu는 상단 바 같은 느낌, context menu는 메세지 길게 누르�
 
 
 ######################################################################################
+
+px : 고정값. 스크린 사이즈 이런거 상관없다.
+dp : 비율? 같음(아닌데? layout_weight가 비율인데... 얘는 그냥 다른 단위인 것 같다.)
+
+android:layout_weight="" : 비율. TextView가 이 값이 2고 Button이 1이라면 둘은 2대1의 비율로 화면을 구성한다.
+
+padding : 위젯?은 움직이지 않고 내부가 바뀐다. 즉 노란색 네모 안에 빨간색 글씨가 써져있다면 padding이 커질 수록 글씨와 네모 사이의 거리가
+		멀어지게 된다. 즉 네모의 더 깊은 곳에 글씨가 위치하게 된다.
+
+margin : 위젯이 움직인다. 
+
+Frame layout : 레이아웃이 겹쳐진다.
+
+table layout의 stretch Column : 
+	android:StretchColumns="1" : 1번 (두번째) 열의 칼럼 크기?를 늘린다.
+
+시작코드 2개.
+super.onCreate(savedInstanceState);
+setContentView(R.layout.Activity_main);
+
+토스트 만들기
+Toast.makeText(getApplicationContext(or this in some cases), msg, Toast.LENGTH_SHORT(or LONG)).show();
+
+orientation의 default는 horizontal이다.
+
+
+Relative layout의 명령어.
+	부모에 맞춰 상대적인 위치를 결정할 때
+		android:layout_alignParentTop
+		android:layout_alignParentBottom
+		android:layout_centerInParent ...
+
+	다른 레이아웃에 맞춰 상대적인 위치를 결정할 때
+		android:layout_alignTop = "@+id/wid1"
+		android:layout_alignBottom = "@+id/wid2"
+
+레이아웃 inflation
+
+	LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+	inflater.inflate(R.layout.sub1, container, true);	//  sub1의 자신의 container에 띄워라, container는 xml에 미리 정의된 linear layout. Button이랑 동일한 느낌이라고 생각하면 된다.
+
+startActivityForResult로 호출된 액티비티에서 결과값 반환하기
+
+	~~
+	setResult(200, intent);		// startActivityForResult랑 매개변수 순서가 반대다.
+	finish();
+
+	이렇게 결과를 보내면 처음에 호출했던 쪽에서 onActivityResult를 override해서 받는다.
+		받을때 조건문은 result code가 아니라 request code로 받더라.
+
+4 core components of android app
+
+	1. Activity
+	2. Service
+	3. Broadcast receiver
+	4. content provider
+
+intent : abstract description of operation to be performed. ("what you want to do")
+
+transition methods
+	onCreate : 액티비티가 처음 만들어졌을때 호출
+	onStart : 액티비티가 유저한테 보여질때 호출
+	onRestart : 액티비티가 멈췄다가(유저화면에서 사라졌다가) 다시 동작할때 호출
+	onResume : 액티비티가 (사라지지는 않고) 잠깐 재껴져있다가 유저와 소통하여 다시 통제권? 을 얻었을때
+	onPause : 액티비티가 멈췄을때 (사라지지는 않고 재껴짐) 호출
+	onStop : 액티비티가 사라졌을때 호출
+	onDestroy : 액티비티가 시스템으로부터 제거되기 전에 호출
+
+
+Service
+
+	onCreate()
+	onStartCommand()
+		startService(Intent intent)가 호출될때 같이 실행되는듯
+	onDestroy()
+		sopService(Intent intent)가 호출되면 같이 실행되나..?
+
+android:scaleType="fitXY"
+android:drawableLeft
+android:inputType="textEmailAddress"
+
+
+menus
+	options menu
+	context menu
+	floating action buttons
+	
+	android(or app?):showAsAction="ifRoom" (withText, always, never)
+
+	onOptionsItemSelected(@NonNull MenuItem item)
+		curId = item.getItemId();
+
+	onCreateOptionsMenu(Menu menu)
+	getMenuInflater().inflate(R.menu.menu, menu);
+
+헷갈리는 포인트
+
+	프레그먼트에서 inflate 할때는 fragment의 id가 아니라 layout의 id를 넣는 것 같다?
+
+
+<MainActivity>
+	mainFragment = (MainFragment)getSupportFragmentManager().findFragmentById(R.id.mainFragment);
+	# mainFragment is fragment id in main activity xml
+
+	getSupportFragmentManager().beginTransaction().replace(R.id.container, menuFragment).commit();
+
+
+프레그먼트 라이프사이클
+
+	onAttach() -> onCreate() -> onCreateView() -> onActivityCreated() -> onStart(), onResume(), onPause(), onStop()
+	onDestroyView() -> onDestroy() -> onDetach()
+
+
+프레그먼트에서 버튼 관련 코드 짜기
+
+	ViewGroup rootView = (ViewGroup)inflater.inflate(R.layout.fragment_main, container, true);
+	Button button = rootView.findViewById(R.id.Button);
+	button.SetOnClickListener(new View.onClickListener() { 
+	@Override
+	public void onClick(View view) {
+		MainActivirty ma = (MainActivity)getActivity();
+		ma.onFragmentChanged(0);
+		}
+	});
+	return rootView;
