@@ -177,3 +177,7 @@ menus
 		}
 	});
 	return rootView;
+
+view : the android's most basic block of a UI component
+widgets : Interactive UI(view) components
+layout(view group) : an invisible container used for holding other views and nested layouts
