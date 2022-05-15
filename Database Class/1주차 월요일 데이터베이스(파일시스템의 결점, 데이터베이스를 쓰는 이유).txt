@@ -80,3 +80,5 @@ physical data indepence는 둘 중 한쪽이 바뀌어도, 서로 독립성을 �
 
 	데이터베이스에서 어떤 사용자도 모든 데이터에 접근할 수 있어서는 안된다. 재무 관련 사용자는 관련 값만을 보면 되고, 그들이 다른 
 	정보를 볼 필요는 없다. file-processing system에 기반을 두는 application program은 이러한 제약조건을 두기가 어렵다.
+
+test
