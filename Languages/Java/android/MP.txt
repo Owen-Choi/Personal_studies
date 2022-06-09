@@ -1,0 +1,83 @@
+onDraw(Canvas canvas)
+
+	paint.setColor(int color) : 색상
+	paint.setStrokeWidth(float width) : 두께
+	paint.setStyle(Paint.Style.~)
+		FILL : 내부 채우기, 테두리 x
+		FILL_AND_STROKE : 내부 채우기 + 테두리 O
+		STROKE : 내부 채우기 x,  테두리 O
+
+	Path path = new Path();
+	Paint pnt = new Paint();
+	pnt.setStrokeWidth(5);
+	pnt.setStyle(Paint.Style.STROKE);
+	path.addRect(100,1000,150,1090, Path.direction.CW);
+	// 선언한 path와 paint로 canvas에 그리기
+	canvas.drawPath(path, pnt)
+	.
+	.
+	.
+
+	path.reset();
+	path.moveTo(10,1200);
+	path.lineTo(50,1150);
+	path.lineTo(400,1110);
+	pnt.setStrokeWidth(5);
+	pnt.setColor(Color.BLUE);
+	canvas.drawPath(path, pnt);
+
+	///////////////////////////////////////////
+	Bitmap : 
+	Resources res = getResources();
+	mAndroidGreen = BitmapFactory.decodeResources(res , R.drawable.android_green); 
+	canvas.drawBitmap(mAndroidGreen, 0, 1000, paint)
+
+	///////////////////////////////////////////
+	Animation
+	Animation anim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.translate);
+		==> translate : 미리 정의해둔 animation xml 파일
+
+MediaPlayer() : 
+
+
+	(player가 null이 아니면 (== 이미 동작중이면) player.release를 통해 객체 리소스 해제)
+	player = new MediaPlayer();
+	player.setDataSource(url);
+	player.prepare(); 	// 파일의 앞 부분을 읽고 정상적인 파일인지 준비하는 과정이라고 한다.
+	player.start();
+	
+
+	player.stop;	//  파일 재생 중지
+	
+	position = player.getCurrentPosition();	// 일시 중지 전 파일 위치 가져오기.
+	player.pause;	// 파일 재생 일시중지.
+	
+	// 일시중지 시점에서 저장한 position은 아래의 코드로 불러올 수 있음.
+	player.start();
+	player.seekTo(position);		//  포지션 위치로 이동? 하는 코드
+
+MediaController : 
+	
+	과제에서 나오긴 했는데 중요한건진 모르겠다.
+	
+	MediaController mc = new MediaController(this);	// this == context
+	videoView.setMediaController(mc);
+	.
+	.
+	.
+	videoView.setURI(Uri.parse(url));
+	videoView.requestFocus();
+	videoView.start();
+
+		==> 비디오 실행 코드.
+
+
+LBS
+
+	LocationManager
+	LocationListener
+
+		manager.requestLocationUpdates() 의 parameter로 LocationListener를 implement
+		한 클래스의 객체를 넘긴다. 
+		이 객체는 onStatusChanged, onProviderEnabled, onProviderDisabled,
+		onLocationChanged 를 override한다.

@@ -1,0 +1,135 @@
+1.a	 End to End  process
+		1. Objective setting
+		2. Data curation 
+		3. Data inspection
+		4. Data preparation
+		5. Data analysis
+		6. Evaluation of the results
+		7. Deployment
+    b	Data value changes ->
+	Feature engineering ->
+	Data reduction ->
+
+2. 	feature selection 이랑 feature reduction 차이
+	correlation, regression
+	지도학습, 비지도학습 차이 
+		지도학습 : 예측함
+		비지도 학습 : 예측 안하고 기존의 데이터셋을 특정 그룹으로 나눔
+	bias(편향), 분산
+		
+3. 	앙상블 러닝 메소드 : 
+	Bagging, AdaBoost, Gradient Boosting 각각 설명하고 각 메서드들의 공통점과 차이점 설명
+
+4.	스케일링
+
+5.	아이작 아시모프, 톰 클랜시 decision stump
+
+6.	좌표 8개 주고 센터 3개인 k mean 클러스터 처음이랑 마지막 그려라.
+
+7. 	classification 같은데 아무것도 모르겠다. 
+		confusion matrix, cutoff, accuracy, precision, recall, ..., ROC
+
+8.	knn 이랑 GridSearchCV 코드 완성하기
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+MSE : 
+	Mean Squared Error : 에러를 제곱한 것의 평균.
+	이 값이 작을 수록 원본과의 차이가 적은 것이다. 
+	RMSE 는 여기에 루트를 씌운 값. 딱 그 정도의 의미만 가지고 있는듯.
+
+MAE : 
+	Residual에 절댓값을 씌운 값.
+	MAPE : MAE를 퍼센트로 나타낼 수 있게 만든 값. outlier의 영향을 덜 받는다.
+		ㄴ 이것의 문제는 분모가 0에 가까워지면 값이 엄청나게 커진다는 것.
+	MPE : MAPE에서 절댓값을 뺀 수치. 모델이 underperformance (-) 인지 overperformance(+)인지
+	
+
+SSE, SSR, SST 공부하기
+
+	==> 근데 얘네는 Regression에서만 해당되나??
+		ㄴ 그렇다. 회귀식의 평가지표.
+
+지금까지는 Regression에 대한 Error evaluation을 살펴봄,. 이제부터는 classification에 대한 evaluation을 보겠음.
+	==> confusion matrix
+
+confusion matrix : 
+		TP	FN
+		FP	TN
+
+	accuracy : (정답) / (전체)		==>	(TP + TN) / N
+	miscalculation : (오답) / (전체)	==>	(FP + FN) / N
+
+	precision : First Column : TP, FP : 모델이 true라고 예측한 것들(First Column) 중에서 true인 것들
+		TP / (TP + FP)
+	recall(=sensitivity) : First Row : TP, FN : 실제 true인 것들(First Row) 중에서 모델이 true라고 예측한 것들
+		TP / (TP + FN)
+	F measure : Harmonic mean of the precision and recall
+		 2 * precision * recall / (precision + recall)
+	false positive rate : 2번째 Row : FP, TN
+		FP / (FP + TN)
+	specificity : 2번째 Row : FP, TN
+		TN / (TN + FP) 
+
+
+Bagging, AdaBoost, Gradient Boosting의 공통점 + 차이점
+	일단 AdaBoost랑 Gradient Boost는 둘 다 weak base learner 들을 만들고, 이것들을 궁극적으로 strong learner로 만든다.
+	Bagging은...? 
+		==> 일단 내 생각으론, 공통점은 여러개의 base learner들을 통해 더 나은 결과를 만든다는 것 같다.
+		
+Clustering
+	K means
+		Kmeans = KMeans(n_clusters=3).fit(df)
+		Centroids = kmeans.cluster_centers_
+
+	HAC
+		Single Linkage	-Minimum
+		Complete Linkage	-Maximum
+		Average Linkage	-Average
+		Centroid Method
+
+		얘네 계산할 줄 알아야겠죠??
+
+High variance, Low Bias : overfitting
+Low variance, High Bias : underfitting
+
+교차검증
+
+	holdout, stratify, k-fold 대충 흐름 알아놓자.
+	코드도 작성할 줄 알아야 할듯?
+		kfold = KFold(3, True, 1)
+		for train, test in kfold.split(data) : 
+			print('train : %s, test : %s' % (data[train], data[test]))
+
+	knn에서의 CV (Cross Validation)
+		knn_cv = KNeighborsClassifier(n_neighbors = 3)
+		cv_score = cross_val_score(knn_cv, X, y, cv=5)
+
+	LOO (Leave One Out) Cross Validation의 문제점 : 
+		stratify가 불가능함.
+		특수한 상황에만 적용 가능함. 
+
+	Bootstrap Method
+		중복을 허용해서 train, test set을 만드는 기법.
+		자세한 설명이 안나와있네.
+
+	정리하면
+		hold-out : 데이터사이즈가 클때 사용
+		k-fold(cross validation) : 데이터사이즈가 중간일때 사용
+		bootstrap and LOO : 데이터사이즈가 (아주) 작을때 사용
+
+
+GridSearchCV
+	
+	코드 짤 줄 알아야한다. KNN에서 hyperparameter랑 최고점수 찾는 예제 작성할 줄 알아야함.
+
+	knn = KNeighborsClassifier()
+	param_grid = {'n_neighbors' : np.arange(1,25)}
+	grid = GridSearchCV(knn, param_grid, cv = 5)
+	grid.fit(X, y)
+
+	grid.best_params
+	grid.best_score_
